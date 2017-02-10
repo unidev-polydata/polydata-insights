@@ -2,6 +2,10 @@
 
 Service for collectiong statistics on different poly records
 
+As storage is used Redis, so far we will store numeric records
+
+Key for storage  may be storage:id:tag 
+
 
 License
 =======
