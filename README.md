@@ -1,8 +1,6 @@
 # poly-insights
 
-Service for collectiong statistics on different poly records
-
-As storage is used Redis, so far we will store numeric records
+Service for collectiong insights on different poly records
 
 Key for storage  may be `storage:id:tag`
 
