@@ -2,7 +2,19 @@
 
 Service for collectiong insights on different poly records
 
-Key for storage  may be `storage:id:tag`
+Insights are stored by tenant and type collections
+
+Each document in collection will contain key, value, date, custom data
+
+Example :
+
+Collection: cats.votes
+
+| _id  | key  | value  | date  | custom data  |
+|---|---|---|---|---|
+| x  |  cat1  |  5 |  17.01.2017  |  {}  |
+| x  | cat1  | 1  |  18.02.2017 |  {}  |
+| x  |  cat2  | 5  | 22.02.2017  | {}  |
 
 
 License
