@@ -16,6 +16,12 @@ Collection: cats.votes
 | x  | cat1  | 1  |  18.02.2017 |  {}  |
 | x  |  cat2  | 5  | 22.02.2017  | {}  |
 
+## Example queries
+ 
+ - get top keys by value in time range
+ - get top keys by count in time range
+ - get values for key in time range : 5 start = > 1, 1 star = 10
+ - get average for key in time range
 
 License
 =======
