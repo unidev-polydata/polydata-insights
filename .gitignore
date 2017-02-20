@@ -1,25 +1,29 @@
-.gradle
-/build/
-!gradle/wrapper/gradle-wrapper.jar
+# Please keep in mind:
+# - If you need to ignore files on your local machine only, please use .git/info/exclude instead .gitignore
+# - Project specified ignore rules must be located in project directory only
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
+# Eclipse project files
 .settings
+.classpath
+.project
+.metadata
+.mymetadata
 .springBeans
+.externalToolBuilders
+.gradle
 
-### IntelliJ IDEA ###
+# IntelliJ Idea project files
 .idea
-*.iws
+.idea/*
 *.iml
 *.ipr
+*.iws
 
-### NetBeans ###
-nbproject/private/
-build/
-nbbuild/
-dist/
-nbdist/
-.nb-gradle/
+# Always ignore these directories/files
+target
+build
+*/target/*
+logs
+bin
+root/xms/artifacts
+test-output

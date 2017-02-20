@@ -1,34 +1,25 @@
-buildscript {
-	ext {
-		springBootVersion = '1.5.1.RELEASE'
-	}
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-	}
+project.ext.unidevPlatformVersion = "2.1.0-SNAPSHOT"
+
+subprojects {
+
+
+    apply plugin: 'maven'
+    apply plugin: 'java'
+    apply plugin: 'idea'
+
+    if (project.hasProperty('Xunidev')) {
+        repositories {
+            mavenCentral()
+            mavenLocal()
+            jcenter()
+            maven { url 'http://nexus.oss.universal-development.com/releases' }
+            maven { url 'http://nexus.oss.universal-development.com/snapshots' }
+        }
+    } else {
+        apply from: 'http://dev.local/gradle/uploadArchivesSftp.groovy'
+        apply from: 'http://dev.local/gradle/defaultRepositories.groovy'
+        apply from: 'http://dev.local/gradle/javadoc.groovy'
+    }
+
 }
 
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'org.springframework.boot'
-
-jar {
-	baseName = 'poly-insights'
-	version = '0.0.1-SNAPSHOT'
-}
-
-sourceCompatibility = 1.8
-
-repositories {
-	mavenCentral()
-}
-
-
-dependencies {
-	compile('org.springframework.boot:spring-boot-starter-actuator')
-	compile('org.springframework.boot:spring-boot-starter-data-mongodb')
-	compile('org.springframework.boot:spring-boot-starter-hateoas')
-	testCompile('org.springframework.boot:spring-boot-starter-test')
-}
