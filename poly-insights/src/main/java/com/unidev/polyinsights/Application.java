@@ -7,12 +7,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 @SpringBootApplication
 @EnableDiscoveryClient
+@EnableMongoRepositories
 public class Application implements ServletContextInitializer {
 
 	public static void main(String[] args) {
