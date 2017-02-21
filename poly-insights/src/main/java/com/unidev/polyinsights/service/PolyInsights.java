@@ -1,14 +1,17 @@
 package com.unidev.polyinsights.service;
 
 
+import com.unidev.polyinsights.model.Insight;
 import com.unidev.polyinsights.model.InsightRequest;
 import com.unidev.polyinsights.model.InsightType;
 import com.unidev.polyinsights.model.Tenant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -21,6 +24,9 @@ public class PolyInsights {
 
     @Autowired
     private TenantDAO tenantDAO;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     /**
      * Log insight for storage
@@ -46,12 +52,11 @@ public class PolyInsights {
             LOG.warn("Insight value not accepted {}", insightRecord);
             throw new InsightNotAccepted("Insight value not accepted");
         }
-
-
-
-
-
-
+        Insight insight = new Insight();
+        insight.setDate(new Date());
+        insight.setKey(insightRecord.getKey());
+        insight.setValue(Long.parseLong(insightRecord.getValue()));
+        mongoTemplate.save(insight, tenant.getTenant() + "." + insightType.getName());
     }
 
 }
