@@ -3,6 +3,7 @@ package com.unidev.polyinsights.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Document(collection = "tenant")
@@ -20,6 +21,13 @@ public class Tenant {
         sb.append(", types=").append(types);
         sb.append('}');
         return sb.toString();
+    }
+
+    public void addType(InsightType type) {
+        if (types == null) {
+            types = new HashMap<>();
+        }
+        types.put(type.getName(), type);
     }
 
     public String getTenant() {
