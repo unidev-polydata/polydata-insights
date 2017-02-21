@@ -5,6 +5,7 @@ import com.unidev.polyinsights.model.Insight;
 import com.unidev.polyinsights.model.InsightRequest;
 import com.unidev.polyinsights.model.InsightType;
 import com.unidev.polyinsights.model.Tenant;
+import com.unidev.polyinsights.service.InsightNotAccepted;
 import com.unidev.polyinsights.service.PolyInsights;
 import com.unidev.polyinsights.service.TenantDAO;
 import org.junit.Test;
@@ -25,6 +26,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.fail;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {Application.class, PolyInsightsApplicationTests.class})
@@ -95,5 +97,41 @@ public class PolyInsightsApplicationTests {
 	}
 
 
+	@Test
+	public void insightTimeInterval() {
+		Tenant tenant = new Tenant();
+		tenant.setTenant("test_tenant");
+
+		InsightType insightType = new InsightType();
+		insightType.setInterval(1000 * 60);
+		insightType.setName("test_insight");
+		insightType.setValues(new HashSet<>(Arrays.asList("1", "2", "3")));
+		tenant.addType(insightType);
+
+		tenantDAO.save(tenant);
+
+		String clientId = "client_id_" + System.currentTimeMillis();
+
+		InsightRequest insightRequest = new InsightRequest();
+		insightRequest.setTenant("test_tenant");
+		insightRequest.setKey("test_insight");
+		insightRequest.setValue("2");
+
+		polyInsights.logInsight(insightRequest, clientId, new HashMap());
+
+		InsightRequest insightRequest2 = new InsightRequest();
+		insightRequest2.setTenant("test_tenant");
+		insightRequest2.setKey("test_insight");
+		insightRequest2.setValue("1");
+
+		try {
+			polyInsights.logInsight(insightRequest2, clientId, new HashMap());
+			fail();
+		} catch (InsightNotAccepted e) {
+			assertThat(e.getMessage(), is("Logging insight less interval time"));
+		}
+
+
+	}
 
 }

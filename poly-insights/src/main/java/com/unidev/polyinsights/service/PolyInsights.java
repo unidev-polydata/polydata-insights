@@ -59,12 +59,12 @@ public class PolyInsights {
         String collection =  tenant.getTenant() + "." + insightType.getName();
 
         Date minDate = new Date(System.currentTimeMillis() - insightType.getInterval());
-        Query query = new Query(Criteria.where("clinetId").is("clinetId").and("date").gte(minDate));
+        Query query = new Query(Criteria.where("clientId").is(clinetId).and("date").gte(minDate));
 
         long count = mongoTemplate.count(query, Insight.class, collection);
         if (count != 0) {
             LOG.warn("Logging insight in interval time {}", insightRecord);
-            throw new InsightNotAccepted("Logging insight in interval time");
+            throw new InsightNotAccepted("Logging insight less interval time");
         }
 
         Insight insight = new Insight();
