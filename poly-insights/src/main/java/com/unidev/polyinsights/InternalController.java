@@ -1,4 +1,4 @@
-package com.unidev.service;
+package com.unidev.polyinsights;
 
 import com.unidev.platform.j2ee.common.WebUtils;
 import org.slf4j.Logger;

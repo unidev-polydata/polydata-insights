@@ -1,4 +1,4 @@
-package com.unidev.service.model;
+package com.unidev.polyinsights.model;
 
 
 import java.util.Set;
