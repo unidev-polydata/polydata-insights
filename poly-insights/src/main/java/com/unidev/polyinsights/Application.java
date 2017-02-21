@@ -3,6 +3,7 @@ package com.unidev.polyinsights;
 import com.unidev.platform.j2ee.common.WebUtils;
 import org.jminix.console.servlet.MiniConsoleServlet;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
