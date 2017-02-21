@@ -24,6 +24,10 @@ public class Tenant {
         return sb.toString();
     }
 
+    /**
+     * Add tenant to tenant map
+     * @param type
+     */
     public void addType(InsightType type) {
         if (types == null) {
             types = new HashMap<>();
@@ -31,6 +35,11 @@ public class Tenant {
         types.put(type.getName(), type);
     }
 
+    /**
+     * Fetch insight by tenant type
+     * @param type
+     * @return
+     */
     public Optional<InsightType> fetchInsight(String type) {
         if (types == null) {
             return Optional.empty();
