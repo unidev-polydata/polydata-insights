@@ -1,6 +1,8 @@
 package com.unidev.polyinsights.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
@@ -10,15 +12,19 @@ import java.util.Map;
  * Insight record
  */
 @Document
+@CompoundIndex(name = "key_value", def = "{'key' : 1, 'value' : 1, 'date' : 1}")
 public class Insight {
 
     @Id
     private String _id;
 
+    @Indexed
     private String key;
 
+    @Indexed
     private Long value;
 
+    @Indexed
     private Date date;
 
     private Map<String, Object> customData;
