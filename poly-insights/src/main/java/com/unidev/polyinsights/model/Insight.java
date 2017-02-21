@@ -27,6 +27,9 @@ public class Insight {
     @Indexed
     private Date date;
 
+    @Indexed
+    private String clientId;
+
     private Map<String, Object> customData;
 
 
@@ -37,9 +40,18 @@ public class Insight {
         sb.append(", key='").append(key).append('\'');
         sb.append(", value=").append(value);
         sb.append(", date=").append(date);
+        sb.append(", clientId='").append(clientId).append('\'');
         sb.append(", customData=").append(customData);
         sb.append('}');
         return sb.toString();
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
     public String get_id() {

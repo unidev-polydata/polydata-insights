@@ -62,7 +62,7 @@ public class PolyInsightsApplicationTests {
 		assertThat(dbTenant.getTypes(), is(notNullValue()));
 		assertThat(dbTenant.getTypes().size(), is(1));
 		assertThat(dbTenant.getTypes().get("Test"), is(notNullValue()));
-		assertThat(dbTenant.getTypes().get("test").getName(), is("Test"));
+		assertThat(dbTenant.getTypes().get("Test").getName(), is("Test"));
 
 	}
 
@@ -86,7 +86,7 @@ public class PolyInsightsApplicationTests {
 		insightRequest.setKey("test_insight");
 		insightRequest.setValue("2");
 
-		Insight insight = polyInsights.logInsight(insightRequest, new HashMap());
+		Insight insight = polyInsights.logInsight(insightRequest, "potato", new HashMap());
 
 		assertThat(insight, is(notNullValue()));
 		assertThat(insight.getKey(), is("test_insight"));

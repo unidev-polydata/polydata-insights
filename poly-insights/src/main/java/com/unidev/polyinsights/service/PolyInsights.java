@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -33,7 +35,7 @@ public class PolyInsights {
      * Log insight for storage
      * @param insightRecord
      */
-    public Insight logInsight(InsightRequest insightRecord, Map<String,Object> customData) {
+    public Insight logInsight(InsightRequest insightRecord, String clinetId, Map<String,Object> customData) {
 
         Tenant tenant = tenantDAO.findOne(insightRecord.getTenant());
         if (tenant == null) {
@@ -54,14 +56,24 @@ public class PolyInsights {
             throw new InsightNotAccepted("Insight value not accepted");
         }
 
-        // TODO: check post interval
+        String collection =  tenant.getTenant() + "." + insightType.getName();
+
+        Date minDate = new Date(System.currentTimeMillis() - insightType.getInterval());
+        Query query = new Query(Criteria.where("clinetId").is("clinetId").and("date").gte(minDate));
+
+        long count = mongoTemplate.count(query, Insight.class, collection);
+        if (count != 0) {
+            LOG.warn("Logging insight in interval time {}", insightRecord);
+            throw new InsightNotAccepted("Logging insight in interval time");
+        }
 
         Insight insight = new Insight();
         insight.setDate(new Date());
+        insight.setClientId(clinetId);
         insight.setKey(insightRecord.getKey());
         insight.setValue(Long.parseLong(insightRecord.getValue()));
         insight.setCustomData(customData);
-        mongoTemplate.save(insight, tenant.getTenant() + "." + insightType.getName());
+        mongoTemplate.save(insight, collection);
         return insight;
     }
 
