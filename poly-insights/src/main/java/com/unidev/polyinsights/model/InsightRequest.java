@@ -4,11 +4,11 @@ package com.unidev.polyinsights.model;
 /**
  * Insight value object for recording data
  */
-public class InsightRecord {
+public class InsightRequest {
 
     private String tenant;
     private String key;
-    private Long value;
+    private String value;
 
     public String getTenant() {
         return tenant;
@@ -26,11 +26,11 @@ public class InsightRecord {
         this.key = key;
     }
 
-    public Long getValue() {
+    public String getValue() {
         return value;
     }
 
-    public void setValue(Long value) {
+    public void setValue(String value) {
         this.value = value;
     }
 }
