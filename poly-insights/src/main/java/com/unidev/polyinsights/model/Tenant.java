@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Document(collection = "tenant")
 public class Tenant {
@@ -28,6 +29,17 @@ public class Tenant {
             types = new HashMap<>();
         }
         types.put(type.getName(), type);
+    }
+
+    public Optional<InsightType> fetchInsight(String type) {
+        if (types == null) {
+            return Optional.empty();
+        }
+        if (!types.containsKey(type)) {
+            return Optional.empty();
+        }
+        InsightType insightType = types.get(type);
+        return Optional.of(insightType);
     }
 
     public String getTenant() {
