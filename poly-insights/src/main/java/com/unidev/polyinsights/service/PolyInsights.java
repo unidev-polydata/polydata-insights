@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -32,7 +33,7 @@ public class PolyInsights {
      * Log insight for storage
      * @param insightRecord
      */
-    public void logInsight(InsightRequest insightRecord) {
+    public void logInsight(InsightRequest insightRecord, Map<String,Object> customData) {
 
         Tenant tenant = tenantDAO.findOne(insightRecord.getTenant());
         if (tenant == null) {
@@ -56,6 +57,7 @@ public class PolyInsights {
         insight.setDate(new Date());
         insight.setKey(insightRecord.getKey());
         insight.setValue(Long.parseLong(insightRecord.getValue()));
+        insight.setCustomData(customData);
         mongoTemplate.save(insight, tenant.getTenant() + "." + insightType.getName());
     }
 

@@ -1,8 +1,11 @@
 package com.unidev;
 
 import com.unidev.polyinsights.Application;
+import com.unidev.polyinsights.model.Insight;
+import com.unidev.polyinsights.model.InsightRequest;
 import com.unidev.polyinsights.model.InsightType;
 import com.unidev.polyinsights.model.Tenant;
+import com.unidev.polyinsights.service.PolyInsights;
 import com.unidev.polyinsights.service.TenantDAO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +18,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -29,6 +33,9 @@ public class PolyInsightsApplicationTests {
 
 	@Autowired
 	private TenantDAO tenantDAO;
+
+	@Autowired
+	private PolyInsights polyInsights;
 
 	@Test
 	public void contextLoads() {
@@ -56,6 +63,31 @@ public class PolyInsightsApplicationTests {
 		assertThat(dbTenant.getTypes().size(), is(1));
 		assertThat(dbTenant.getTypes().get("Test"), is(notNullValue()));
 		assertThat(dbTenant.getTypes().get("test").getName(), is("Test"));
+
+	}
+
+	@Test
+	public void insightPersist() {
+
+		Tenant tenant = new Tenant();
+		tenant.setTenant("test_tenant");
+
+		InsightType insightType = new InsightType();
+		insightType.setInterval(1000);
+		insightType.setName("test_insight");
+		insightType.setValues(new HashSet<>(Arrays.asList("1", "2", "3")));
+		tenant.addType(insightType);
+
+		tenantDAO.save(tenant);
+
+
+		InsightRequest insightRequest = new InsightRequest();
+		insightRequest.setTenant("test_tenant");
+		insightRequest.setKey("test_insight");
+		insightRequest.setValue("2");
+
+		polyInsights.logInsight(insightRequest, new HashMap());
+
 
 	}
 
