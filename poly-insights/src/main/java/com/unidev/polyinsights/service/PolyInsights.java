@@ -33,7 +33,7 @@ public class PolyInsights {
      * Log insight for storage
      * @param insightRecord
      */
-    public void logInsight(InsightRequest insightRecord, Map<String,Object> customData) {
+    public Insight logInsight(InsightRequest insightRecord, Map<String,Object> customData) {
 
         Tenant tenant = tenantDAO.findOne(insightRecord.getTenant());
         if (tenant == null) {
@@ -53,12 +53,16 @@ public class PolyInsights {
             LOG.warn("Insight value not accepted {}", insightRecord);
             throw new InsightNotAccepted("Insight value not accepted");
         }
+
+        // TODO: check post interval
+
         Insight insight = new Insight();
         insight.setDate(new Date());
         insight.setKey(insightRecord.getKey());
         insight.setValue(Long.parseLong(insightRecord.getValue()));
         insight.setCustomData(customData);
         mongoTemplate.save(insight, tenant.getTenant() + "." + insightType.getName());
+        return insight;
     }
 
 }

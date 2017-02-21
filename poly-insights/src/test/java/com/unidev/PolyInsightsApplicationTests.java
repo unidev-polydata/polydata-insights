@@ -86,8 +86,11 @@ public class PolyInsightsApplicationTests {
 		insightRequest.setKey("test_insight");
 		insightRequest.setValue("2");
 
-		polyInsights.logInsight(insightRequest, new HashMap());
+		Insight insight = polyInsights.logInsight(insightRequest, new HashMap());
 
+		assertThat(insight, is(notNullValue()));
+		assertThat(insight.getKey(), is("test_insight"));
+		assertThat(insight.getValue(), is(2L));
 
 	}
 
