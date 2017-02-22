@@ -76,7 +76,7 @@ public class PolyInsightsApplicationTests {
 
 		InsightType insightType = new InsightType();
 		insightType.setInterval(1000);
-		insightType.setName("test_insight");
+		insightType.setName("test_insight_type");
 		insightType.setValues(new HashSet<>(Arrays.asList("1", "2", "3")));
 		tenant.addType(insightType);
 
@@ -86,6 +86,7 @@ public class PolyInsightsApplicationTests {
 		InsightRequest insightRequest = new InsightRequest();
 		insightRequest.setTenant("test_tenant");
 		insightRequest.setKey("test_insight");
+		insightRequest.setType("test_insight_type");
 		insightRequest.setValue("2");
 
 		Insight insight = polyInsights.logInsight(insightRequest, "potato", new HashMap());
@@ -104,6 +105,7 @@ public class PolyInsightsApplicationTests {
 
 		InsightType insightType = new InsightType();
 		insightType.setInterval(1000 * 60);
+		insightType.setSameInsightInterval(1000 * 60);
 		insightType.setName("test_insight");
 		insightType.setValues(new HashSet<>(Arrays.asList("1", "2", "3")));
 		tenant.addType(insightType);
@@ -114,6 +116,7 @@ public class PolyInsightsApplicationTests {
 
 		InsightRequest insightRequest = new InsightRequest();
 		insightRequest.setTenant("test_tenant");
+		insightRequest.setType("test_insight");
 		insightRequest.setKey("test_insight");
 		insightRequest.setValue("2");
 
@@ -121,6 +124,45 @@ public class PolyInsightsApplicationTests {
 
 		InsightRequest insightRequest2 = new InsightRequest();
 		insightRequest2.setTenant("test_tenant");
+		insightRequest2.setType("test_insight");
+		insightRequest2.setKey("test_insight2");
+		insightRequest2.setValue("1");
+
+		try {
+			polyInsights.logInsight(insightRequest2, clientId, new HashMap());
+			fail();
+		} catch (InsightNotAccepted e) {
+			assertThat(e.getMessage(), is("Logging insight too often, global limit"));
+		}
+	}
+
+	@Test
+	public void sameInsightTimeout() {
+		Tenant tenant = new Tenant();
+		tenant.setTenant("test_tenant");
+
+		InsightType insightType = new InsightType();
+		insightType.setInterval(0);
+		insightType.setSameInsightInterval(1000 * 60);
+		insightType.setName("test_insight");
+		insightType.setValues(new HashSet<>(Arrays.asList("1", "2", "3")));
+		tenant.addType(insightType);
+
+		tenantDAO.save(tenant);
+
+		String clientId = "client_id_" + System.currentTimeMillis();
+
+		InsightRequest insightRequest = new InsightRequest();
+		insightRequest.setTenant("test_tenant");
+		insightRequest.setType("test_insight");
+		insightRequest.setKey("test_insight");
+		insightRequest.setValue("2");
+
+		polyInsights.logInsight(insightRequest, clientId, new HashMap());
+
+		InsightRequest insightRequest2 = new InsightRequest();
+		insightRequest2.setTenant("test_tenant");
+		insightRequest2.setType("test_insight");
 		insightRequest2.setKey("test_insight");
 		insightRequest2.setValue("1");
 
@@ -128,8 +170,9 @@ public class PolyInsightsApplicationTests {
 			polyInsights.logInsight(insightRequest2, clientId, new HashMap());
 			fail();
 		} catch (InsightNotAccepted e) {
-			assertThat(e.getMessage(), is("Logging insight less interval time"));
+			assertThat(e.getMessage(), is("Logging insight too often, item limit"));
 		}
+
 
 
 	}
