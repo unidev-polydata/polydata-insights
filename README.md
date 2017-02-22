@@ -23,6 +23,24 @@ Collection: cats.votes
  - get values for key in time range : 5 start = > 1, 1 star = 10
  - get average for key in time range
 
+Get insights grouped by sum of values
+
+```
+db['test_tenant.test_insight'].aggregate(
+[
+	{ $match: { date: { $gte: new ISODate("2017-02-21") } }},
+	{$group: { _id: "$key", total: { $sum: "$value"  }	     }   },
+	{ $sort: { total: -1 } }
+]
+
+)
+
+
+{ "_id" : "test_insight", "total" : NumberLong(64)}
+{ "_id" : "test_insight2", "total" : NumberLong(2)}
+
+```
+
 License
 =======
  
