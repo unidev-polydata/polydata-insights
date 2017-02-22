@@ -10,10 +10,22 @@ public class InsightRequest {
 
     @NotNull
     private String tenant;
+
+    @NotNull
+    private String type;
+
     @NotNull
     private String key;
     @NotNull
     private String value;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getTenant() {
         return tenant;
@@ -43,6 +55,7 @@ public class InsightRequest {
     public String toString() {
         final StringBuffer sb = new StringBuffer("InsightRequest{");
         sb.append("tenant='").append(tenant).append('\'');
+        sb.append(", type='").append(type).append('\'');
         sb.append(", key='").append(key).append('\'');
         sb.append(", value='").append(value).append('\'');
         sb.append('}');

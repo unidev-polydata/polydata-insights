@@ -2,6 +2,7 @@ package com.unidev.polyinsights.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -11,8 +12,13 @@ import java.util.Map;
 /**
  * Insight record
  */
+
+@CompoundIndexes({
+        @CompoundIndex(name = "key_value", def = "{'key' : 1, 'value' : 1, 'date' : 1}"),
+        @CompoundIndex(name = "key_client_date", def = "{'key' : 1, 'clientId' : 1 ,'date' : 1}"),
+        @CompoundIndex(name = "client_date", def = "{'clientId' : 1 ,'date' : 1}")
+})
 @Document
-@CompoundIndex(name = "key_value", def = "{'key' : 1, 'value' : 1, 'date' : 1}")
 public class Insight {
 
     @Id

@@ -43,7 +43,7 @@ public class PolyInsights {
             throw new InsightNotAccepted("Tenant not found");
         }
 
-        Optional<InsightType> optionalInsightType = tenant.fetchInsight(insightRecord.getKey());
+        Optional<InsightType> optionalInsightType = tenant.fetchInsight(insightRecord.getType());
         if (!optionalInsightType.isPresent()) {
             LOG.warn("Insight type not accepted {}", insightRecord);
             throw new InsightNotAccepted("Insight type not accepted");
@@ -58,13 +58,23 @@ public class PolyInsights {
 
         String collection =  tenant.getTenant() + "." + insightType.getName();
 
+        // check 'global' rate for posting
         Date minDate = new Date(System.currentTimeMillis() - insightType.getInterval());
         Query query = new Query(Criteria.where("clientId").is(clinetId).and("date").gte(minDate));
 
         long count = mongoTemplate.count(query, Insight.class, collection);
         if (count != 0) {
             LOG.warn("Logging insight in interval time {}", insightRecord);
-            throw new InsightNotAccepted("Logging insight less interval time");
+            throw new InsightNotAccepted("Logging insight too often, global limit");
+        }
+
+        // check specific key posting rate
+        minDate = new Date(System.currentTimeMillis() - insightType.getSameInsightInterval());
+        query = new Query(Criteria.where("key").is(insightRecord.getKey()).and("clientId").is(clinetId).and("date").gte(minDate));
+        count = mongoTemplate.count(query, Insight.class, collection);
+        if (count != 0) {
+            LOG.warn("Logging insight in interval time {}", insightRecord);
+            throw new InsightNotAccepted("Logging insight too often, item limit");
         }
 
         Insight insight = new Insight();
