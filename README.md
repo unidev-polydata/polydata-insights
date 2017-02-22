@@ -22,6 +22,7 @@ Collection: cats.votes
  - get top keys by count in time range
  - get values for key in time range : 5 start = > 1, 1 star = 10
  - get average for key in time range
+ - get voted with specific value
 
 Get insights grouped by sum of values
 
@@ -51,6 +52,37 @@ db['test_tenant.test_insight'].aggregate(
 ]
 
 )
+
+{ "_id" : "test_insight2", "keys" : [ { "value" : { "$numberLong" : "2" } } ] }
+```
+
+Group keys by insight count
+```
+db['test_tenant.test_insight'].aggregate(
+[
+	{ $match: { date: { $gte: new ISODate("2017-02-21") } }},
+	{$group: { _id: "$key", count: { $sum: 1  }	     }   },
+	{ $sort: { count: -1 } }
+]
+)
+
+
+{  "_id" : "test_insight",  "count" : NumberInt(34) }
+{  "_id" : "test_insight2", "count" : NumberInt(1) }
+```
+
+Average value 
+```
+
+db['test_tenant.test_insight'].aggregate(
+[
+	{ $match: { date: { $gte: new ISODate("2017-02-21") } }},
+	{$group: { _id: "$key", avg: { $avg: "$value"  }	     }   },
+	{ $sort: { avg: -1 } }
+]
+
+)
+
 ```
 
 License
