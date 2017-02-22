@@ -41,6 +41,18 @@ db['test_tenant.test_insight'].aggregate(
 
 ```
 
+Fetching votes per key
+```
+db['test_tenant.test_insight'].aggregate(
+[
+	{ $match: {  key:"test_insight2", date: { $gte: new ISODate("2017-02-21") } }},
+	{$group: { _id: "$key", keys: { $push: { value: "$value" } }	     }   }
+
+]
+
+)
+```
+
 License
 =======
  
