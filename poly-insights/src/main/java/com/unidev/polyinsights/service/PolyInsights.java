@@ -1,10 +1,7 @@
 package com.unidev.polyinsights.service;
 
 
-import com.unidev.polyinsights.model.Insight;
-import com.unidev.polyinsights.model.InsightRequest;
-import com.unidev.polyinsights.model.InsightType;
-import com.unidev.polyinsights.model.Tenant;
+import com.unidev.polyinsights.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +53,8 @@ public class PolyInsights {
             throw new InsightNotAccepted("Insight value not accepted");
         }
 
+        //TODO: add remote service call for checking if key exists
+
         String collection =  tenant.getTenant() + "." + insightType.getName();
 
         // check 'global' rate for posting
@@ -88,6 +87,17 @@ public class PolyInsights {
     }
 
 
+    public InsightQueryResponse listTopKeysByValue(InsightQuery insightQuery) {
+        return null;
+    }
 
+    public InsightQueryResponse listTopKeysByCount(InsightQuery insightQuery) {
+        return null;
+    }
+
+    public InsightQueryResponse fetchInsightStatsByKey(InsightQuery insightQuery) {
+
+        return null;
+    }
 
 }
