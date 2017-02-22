@@ -35,7 +35,7 @@ public class PolyInsights {
      * Log insight for storage
      * @param insightRecord
      */
-    public Insight logInsight(InsightRequest insightRecord, String clinetId, Map<String,Object> customData) {
+    public Insight logInsight(InsightRequest insightRecord, String clientId, Map<String,Object> customData) {
 
         Tenant tenant = tenantDAO.findOne(insightRecord.getTenant());
         if (tenant == null) {
@@ -60,7 +60,7 @@ public class PolyInsights {
 
         // check 'global' rate for posting
         Date minDate = new Date(System.currentTimeMillis() - insightType.getInterval());
-        Query query = new Query(Criteria.where("clientId").is(clinetId).and("date").gte(minDate));
+        Query query = new Query(Criteria.where("clientId").is(clientId).and("date").gte(minDate));
 
         long count = mongoTemplate.count(query, Insight.class, collection);
         if (count != 0) {
@@ -70,7 +70,7 @@ public class PolyInsights {
 
         // check specific key posting rate
         minDate = new Date(System.currentTimeMillis() - insightType.getSameInsightInterval());
-        query = new Query(Criteria.where("key").is(insightRecord.getKey()).and("clientId").is(clinetId).and("date").gte(minDate));
+        query = new Query(Criteria.where("key").is(insightRecord.getKey()).and("clientId").is(clientId).and("date").gte(minDate));
         count = mongoTemplate.count(query, Insight.class, collection);
         if (count != 0) {
             LOG.warn("Logging insight in interval time {}", insightRecord);
@@ -79,12 +79,15 @@ public class PolyInsights {
 
         Insight insight = new Insight();
         insight.setDate(new Date());
-        insight.setClientId(clinetId);
+        insight.setClientId(clientId);
         insight.setKey(insightRecord.getKey());
         insight.setValue(Long.parseLong(insightRecord.getValue()));
         insight.setCustomData(customData);
         mongoTemplate.save(insight, collection);
         return insight;
     }
+
+
+
 
 }
