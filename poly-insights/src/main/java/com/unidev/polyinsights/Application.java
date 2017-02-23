@@ -18,6 +18,8 @@ import javax.servlet.ServletException;
 @EnableMongoRepositories
 public class Application implements ServletContextInitializer {
 
+	public static final String VERSION = "0.0.1";
+
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
