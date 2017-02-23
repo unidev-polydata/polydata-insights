@@ -108,11 +108,10 @@ public class PolyInsights {
     /**
      * List top insights by sum of insights, useful for likes
      * @param insightQuery
-     * @return
+     * @return List of [{count=4, _id=test_insight}, {count=2, _id=test_insight2}]
      */
     public InsightQueryResponse listTopKeysByValueSum(InsightQuery insightQuery) {
-
-        Optional<InsightType> optionalInsightType = validateTenantInsight(insightQuery.getTenant(), insightQuery.getInsight());
+        validateTenantInsight(insightQuery.getTenant(), insightQuery.getInsight());
         String collection =  insightQuery.getTenant() + "." + insightQuery.getInsight();
 
         Date startDate = insightQuery.getInterval().fetchDateFrom(new Date());
@@ -123,8 +122,7 @@ public class PolyInsights {
                 sort(Sort.Direction.DESC, "count")
         );
 
-        AggregationResults<BasicPoly> aggregate = mongoTemplate.aggregate(aggregation, collection, BasicPoly.class
-        );
+        AggregationResults<BasicPoly> aggregate = mongoTemplate.aggregate(aggregation, collection, BasicPoly.class);
         List<BasicPoly> response = aggregate.getMappedResults();
         LOG.info("listTopKeysByValueSum {}", response);
 
@@ -133,8 +131,25 @@ public class PolyInsights {
         return insightResponse;
     }
 
-    public InsightQueryResponse listTopKeysByCount(InsightQuery insightQuery) {
-        return null;
+    public InsightQueryResponse listTopKeysByAverageValue(InsightQuery insightQuery) {
+        validateTenantInsight(insightQuery.getTenant(), insightQuery.getInsight());
+        String collection =  insightQuery.getTenant() + "." + insightQuery.getInsight();
+
+        Date startDate = insightQuery.getInterval().fetchDateFrom(new Date());
+
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("date").gte(startDate)),
+                group("key").avg("value").as("avg"),
+                sort(Sort.Direction.DESC, "avg")
+        );
+
+        AggregationResults<BasicPoly> aggregate = mongoTemplate.aggregate(aggregation, collection, BasicPoly.class);
+        List<BasicPoly> response = aggregate.getMappedResults();
+        LOG.info("listTopKeysByAverageValue {}", response);
+
+        InsightQueryResponse insightResponse = new InsightQueryResponse();
+        insightResponse.addAll(response);
+        return insightResponse;
     }
 
     public InsightQueryResponse fetchInsightStatsByKey(InsightQuery insightQuery) {

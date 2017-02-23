@@ -24,7 +24,7 @@ Collection: cats.votes
  - get average for key in time range
  - get voted with specific value
 
-Get insights grouped by sum of values
+Get insights grouped by sum of values x
 
 ```
 db['test_tenant.test_insight'].aggregate(
@@ -71,7 +71,7 @@ db['test_tenant.test_insight'].aggregate(
 {  "_id" : "test_insight2", "count" : NumberInt(1) }
 ```
 
-Average value 
+Average value  x
 ```
 
 db['test_tenant.test_insight'].aggregate(
