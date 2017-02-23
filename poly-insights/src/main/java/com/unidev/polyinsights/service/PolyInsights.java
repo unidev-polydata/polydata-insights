@@ -5,11 +5,16 @@ import com.unidev.polyinsights.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.Fields;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
@@ -107,7 +112,18 @@ public class PolyInsights {
         Optional<InsightType> optionalInsightType = validateTenantInsight(insightQuery.getTenant(), insightQuery.getInsight());
         String collection =  insightQuery.getTenant() + "." + insightQuery.getInsight();
 
-        //mongoTemplate.ag
+        Date startDate = insightQuery.getInterval().fetchDateFrom(new Date());
+
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("date").gte(startDate)),
+                group("key"),
+                group("count").sum("1").as("count"),
+                sort(Sort.Direction.DESC, "count")
+        );
+
+        AggregationResults<Map> aggregate = mongoTemplate.aggregate(aggregation, collection, Map.class
+        );
+        LOG.info("Mapped results {}", aggregate.getMappedResults());
 
         return null;
     }

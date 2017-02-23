@@ -1,10 +1,7 @@
 package com.unidev;
 
 import com.unidev.polyinsights.Application;
-import com.unidev.polyinsights.model.Insight;
-import com.unidev.polyinsights.model.InsightRequest;
-import com.unidev.polyinsights.model.InsightType;
-import com.unidev.polyinsights.model.Tenant;
+import com.unidev.polyinsights.model.*;
 import com.unidev.polyinsights.service.InsightNotAccepted;
 import com.unidev.polyinsights.service.PolyInsights;
 import com.unidev.polyinsights.service.TenantDAO;
@@ -175,6 +172,15 @@ public class PolyInsightsApplicationTests {
 
 
 
+	}
+
+	@Test
+	public void queryInsights() {
+		InsightQuery insightQuery = new InsightQuery();
+		insightQuery.setTenant("test_tenant");
+		insightQuery.setInsight("test_insight_type");
+		insightQuery.setInterval(TimeInterval.MONTH);
+		polyInsights.listTopKeysByValue(insightQuery);
 	}
 
 }
