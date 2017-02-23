@@ -36,7 +36,8 @@ dependencies {
     compile("com.unidev.platform:unidev-j2ee:$project.unidevPlatformVersion")
 	compile("com.unidev.platform:unidev-exception:$project.unidevPlatformVersion")
 	compile("com.unidev.platform:unidev-dto:$project.unidevPlatformVersion")
-    compile 'org.jminix:jminix:1.2.0'
+	compile 'com.unidev.polydata:polydata-domain:2.1.0-SNAPSHOT'
+	compile 'org.jminix:jminix:1.2.0'
 	compile('org.springframework.boot:spring-boot-starter-data-mongodb')
 	compile('org.springframework.boot:spring-boot-starter-actuator')
 	compile('org.springframework.boot:spring-boot-actuator-docs')
