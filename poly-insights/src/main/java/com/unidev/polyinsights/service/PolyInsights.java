@@ -1,6 +1,8 @@
 package com.unidev.polyinsights.service;
 
 
+import com.unidev.polydata.domain.BasicPoly;
+import com.unidev.polydata.domain.BasicPolyList;
 import com.unidev.polyinsights.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -107,7 +110,7 @@ public class PolyInsights {
      * @param insightQuery
      * @return
      */
-    public InsightQueryResponse listTopKeysByValue(InsightQuery insightQuery) {
+    public InsightQueryResponse listTopKeysByValueSum(InsightQuery insightQuery) {
 
         Optional<InsightType> optionalInsightType = validateTenantInsight(insightQuery.getTenant(), insightQuery.getInsight());
         String collection =  insightQuery.getTenant() + "." + insightQuery.getInsight();
@@ -116,16 +119,18 @@ public class PolyInsights {
 
         Aggregation aggregation = newAggregation(
                 match(Criteria.where("date").gte(startDate)),
-                group("key"),
-                group("count").sum("1").as("count"),
+                group("key").sum("value").as("count"),
                 sort(Sort.Direction.DESC, "count")
         );
 
-        AggregationResults<Map> aggregate = mongoTemplate.aggregate(aggregation, collection, Map.class
+        AggregationResults<BasicPoly> aggregate = mongoTemplate.aggregate(aggregation, collection, BasicPoly.class
         );
-        LOG.info("Mapped results {}", aggregate.getMappedResults());
+        List<BasicPoly> response = aggregate.getMappedResults();
+        LOG.info("listTopKeysByValueSum {}", response);
 
-        return null;
+        InsightQueryResponse insightResponse = new InsightQueryResponse();
+        insightResponse.addAll(response);
+        return insightResponse;
     }
 
     public InsightQueryResponse listTopKeysByCount(InsightQuery insightQuery) {

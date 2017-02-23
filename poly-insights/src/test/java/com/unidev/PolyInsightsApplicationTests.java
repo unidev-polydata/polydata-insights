@@ -175,12 +175,12 @@ public class PolyInsightsApplicationTests {
 	}
 
 	@Test
-	public void queryInsights() {
+	public void listTopKeysByValueSum() {
 		InsightQuery insightQuery = new InsightQuery();
 		insightQuery.setTenant("test_tenant");
 		insightQuery.setInsight("test_insight_type");
 		insightQuery.setInterval(TimeInterval.MONTH);
-		polyInsights.listTopKeysByValue(insightQuery);
+		polyInsights.listTopKeysByValueSum(insightQuery);
 	}
 
 }
