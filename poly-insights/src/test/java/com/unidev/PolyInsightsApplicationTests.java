@@ -192,4 +192,14 @@ public class PolyInsightsApplicationTests {
 		polyInsights.listTopKeysByAverageValue(insightQuery);
 	}
 
+	@Test
+	public void fetchInsightStatsByKey() {
+		InsightQuery insightQuery = new InsightQuery();
+		insightQuery.setTenant("test_tenant");
+		insightQuery.setInsight("test_insight_type");
+		insightQuery.setKey("test_insight2");
+		insightQuery.setInterval(TimeInterval.MONTH);
+		polyInsights.fetchInsightStatsByKey(insightQuery);
+	}
+
 }

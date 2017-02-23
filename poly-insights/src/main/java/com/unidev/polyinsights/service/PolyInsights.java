@@ -17,10 +17,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+
+import java.util.*;
 
 /**
  * Service for doing operations on insights
@@ -131,6 +129,11 @@ public class PolyInsights {
         return insightResponse;
     }
 
+    /**
+     * Fetch inisghts ordered by average value
+     * @param insightQuery
+     * @return [{avg=2.0, _id=test_insight}, {avg=1.5, _id=test_insight2}]
+     */
     public InsightQueryResponse listTopKeysByAverageValue(InsightQuery insightQuery) {
         validateTenantInsight(insightQuery.getTenant(), insightQuery.getInsight());
         String collection =  insightQuery.getTenant() + "." + insightQuery.getInsight();
@@ -152,9 +155,42 @@ public class PolyInsights {
         return insightResponse;
     }
 
+    /**
+     * Fetch inisght values stats
+     * @param insightQuery
+     * @return
+     */
     public InsightQueryResponse fetchInsightStatsByKey(InsightQuery insightQuery) {
+        validateTenantInsight(insightQuery.getTenant(), insightQuery.getInsight());
+        String collection =  insightQuery.getTenant() + "." + insightQuery.getInsight();
 
-        return null;
+        Date startDate = insightQuery.getInterval().fetchDateFrom(new Date());
+
+        Aggregation aggregation = newAggregation(
+                match(Criteria.where("key").is(insightQuery.getKey()).and("date").gte(startDate)),
+                group("key").push("value").as("keys")
+        );
+
+        AggregationResults<BasicPoly> aggregate = mongoTemplate.aggregate(aggregation, collection, BasicPoly.class);
+        BasicPoly mappedResult = aggregate.getUniqueMappedResult();
+        LOG.info("fetchInsightStatsByKey {}", mappedResult); //{keys=[2, 1], _id=test_insight2}
+
+        BasicPoly stats = new BasicPoly();
+        stats._id(mappedResult._id());
+        List<Long> keys = (List<Long>) mappedResult.get("keys");
+        Map<Long, Long> map = new HashMap<>();
+        keys.forEach( key -> {
+            if (!map.containsKey(key)) {
+                map.put(key, 0L);
+            }
+            map.put(key, map.get(key) + 1);
+        });
+        stats.put("stats", map);
+        InsightQueryResponse insightResponse = new InsightQueryResponse();
+        insightResponse.add(stats);
+
+        LOG.info("fetchInsightStatsByKey response {}", insightResponse);
+        return insightResponse;
     }
 
 }
