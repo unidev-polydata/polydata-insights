@@ -34,18 +34,8 @@ public class PolyInsights {
      */
     public Insight logInsight(InsightRequest insightRecord, String clientId, Map<String,Object> customData) {
 
+        Optional<InsightType> optionalInsightType = validateTenantInsight(insightRecord.getTenant(), insightRecord.getType());
         Tenant tenant = tenantDAO.findOne(insightRecord.getTenant());
-        if (tenant == null) {
-            LOG.warn("No matched tenant for insight {}", insightRecord);
-            throw new InsightNotAccepted("Tenant not found");
-        }
-
-        Optional<InsightType> optionalInsightType = tenant.fetchInsight(insightRecord.getType());
-        if (!optionalInsightType.isPresent()) {
-            LOG.warn("Insight type not accepted {}", insightRecord);
-            throw new InsightNotAccepted("Insight type not accepted");
-        }
-
         InsightType insightType = optionalInsightType.get();
 
         if (!insightType.getValues().contains(insightRecord.getValue())) {
@@ -86,8 +76,39 @@ public class PolyInsights {
         return insight;
     }
 
+    /**
+     * Validate tenant and insight name
+     * @param tenantName
+     * @param insightName
+     * @return
+     */
+    protected Optional<InsightType> validateTenantInsight(String tenantName, String insightName) {
+        Tenant tenant = tenantDAO.findOne(tenantName);
+        if (tenant == null) {
+            LOG.warn("No matched tenant for insight {}", tenant);
+            throw new InsightNotAccepted("Tenant not found");
+        }
 
+        Optional<InsightType> optionalInsightType = tenant.fetchInsight(insightName);
+        if (!optionalInsightType.isPresent()) {
+            LOG.warn("Insight type not accepted {} {}", tenant, insightName);
+            throw new InsightNotAccepted("Insight type not accepted");
+        }
+        return optionalInsightType;
+    }
+
+    /**
+     * List top insights by sum of insights, useful for likes
+     * @param insightQuery
+     * @return
+     */
     public InsightQueryResponse listTopKeysByValue(InsightQuery insightQuery) {
+
+        Optional<InsightType> optionalInsightType = validateTenantInsight(insightQuery.getTenant(), insightQuery.getInsight());
+        String collection =  insightQuery.getTenant() + "." + insightQuery.getInsight();
+
+        //mongoTemplate.ag
+
         return null;
     }
 
