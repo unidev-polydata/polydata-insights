@@ -1,5 +1,8 @@
 package com.unidev.polyinsights.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.unidev.polyinsights.model.Tenant;
 import com.unidev.polyinsights.service.TenantDAO;
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.Container;
@@ -18,6 +21,9 @@ public class AdminController extends UI {
 
     @Autowired
     private TenantDAO tenantDAO;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Override
     protected void init(VaadinRequest request) {
@@ -43,11 +49,30 @@ public class AdminController extends UI {
         });
     }
 
-    protected void showTenantDetails(VerticalLayout layout, String tenant) {
+    protected void showTenantDetails(VerticalLayout layout, String tenantName) {
         layout.removeAllComponents();
 
-        Label label = new Label("Tenant: " + tenant);
+        Label label = new Label("Tenant: " + tenantName);
         layout.addComponent(label);
+
+        Tenant tenant = tenantDAO.findOne(tenantName);
+
+        try {
+            String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(tenant);
+
+            TextArea codeArea = new TextArea("Tenant instance");
+            codeArea.setWidth("100%");
+            codeArea.setHeight("100%");
+            codeArea.setRows(15);
+            codeArea.setValue(json);
+
+            layout.addComponent(codeArea);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+
+
 
     }
 }
