@@ -70,6 +70,33 @@ public class AdminController extends UI {
             Notification.show("Notification", "Added tenant with name '" + tenant.getTenant() + "'", Notification.Type.TRAY_NOTIFICATION);
         });
 
+        content.addComponent(new Label("<pre>" +
+                "\nVotes:\n" +
+                "{\n" +
+                "  \"tenant\" : \"cats_wallpapers\",\n" +
+                "  \"types\" : {\n" +
+                "    \"vote\" : {\n" +
+                "      \"name\" : \"vote\",\n" +
+                "      \"values\" : [ \"1\", \"2\", \"3\", \"4\", \"5\" ],\n" +
+                "      \"interval\" : 1000,\n" +
+                "      \"sameInsightInterval\" : 1000\n" +
+                "    }\n" +
+                "  }\n" +
+                "}\n" +
+                "\nLikes:\n" +
+                "{\n" +
+                "  \"tenant\" : \"cats_wallpapers\",\n" +
+                "  \"types\" : {\n" +
+                "    \"like\" : {\n" +
+                "      \"name\" : \"like\",\n" +
+                "      \"values\" : [ \"1\", \"2\"],\n" +
+                "      \"interval\" : 1000,\n" +
+                "      \"sameInsightInterval\" : 1000\n" +
+                "    }\n" +
+                "  }\n" +
+                "}\n" +
+                "</pre>",Label.CONTENT_XHTML));
+
         final VerticalLayout tenantInfo = new VerticalLayout();
         content.addComponent(tenantInfo);
 
@@ -77,6 +104,7 @@ public class AdminController extends UI {
             String tenant = event.getProperty().getValue() + "";
             showTenantDetails(tenantInfo, tenant);
         });
+
     }
 
     protected void showTenantDetails(VerticalLayout layout, String tenantName) {
