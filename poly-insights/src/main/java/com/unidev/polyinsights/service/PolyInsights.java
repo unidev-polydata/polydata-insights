@@ -91,7 +91,7 @@ public class PolyInsights {
     protected Optional<InsightType> validateTenantInsight(String tenantName, String insightName) {
         Tenant tenant = tenantDAO.findOne(tenantName);
         if (tenant == null) {
-            LOG.warn("No matched tenant for insight {}", tenant);
+            LOG.warn("No matched tenant for insight {}", tenantName);
             throw new InsightNotAccepted("Tenant not found");
         }
 
