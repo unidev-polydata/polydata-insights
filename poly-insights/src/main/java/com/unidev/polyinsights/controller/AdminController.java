@@ -12,6 +12,8 @@ import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
+
 /**
  * Controller for management of insights
  */
@@ -60,13 +62,30 @@ public class AdminController extends UI {
         try {
             String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(tenant);
 
-            TextArea codeArea = new TextArea("Tenant instance");
+            final TextArea codeArea = new TextArea("Tenant details");
             codeArea.setWidth("100%");
             codeArea.setHeight("100%");
             codeArea.setRows(15);
             codeArea.setValue(json);
 
             layout.addComponent(codeArea);
+
+            Button save = new Button("Save");
+            layout.addComponent(save);
+
+            save.addClickListener((Button.ClickListener) event -> {
+                String json1 = codeArea.getValue();
+                try {
+                    Tenant updatedTenant = objectMapper.readValue(json1, Tenant.class);
+                    updatedTenant = tenantDAO.save(updatedTenant);
+
+                    Notification.show("Notification", "Record was update for tenant:" + updatedTenant.getTenant(), Notification.Type.TRAY_NOTIFICATION);
+
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
