@@ -5,11 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unidev.polyinsights.model.Tenant;
 import com.unidev.polyinsights.service.TenantDAO;
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.Container;
 import com.vaadin.data.Property;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
@@ -41,7 +41,35 @@ public class AdminController extends UI {
 
         tenantDAO.findAll().forEach(item -> tenants.addItems(item.getTenant()));
         content.addComponent(tenants);
+
+        VerticalLayout popupContent = new VerticalLayout();
+        TextField tenantNameTextField = new TextField("Tenant name");
+        Button addTenantButton = new Button("Add Tenant");
+        popupContent.addComponent(tenantNameTextField);
+        popupContent.addComponent(addTenantButton);
+
+        PopupView popup = new PopupView("Add Tenant", popupContent);
+        content.addComponent(popup);
         content.addComponent(new Label("<hr />",Label.CONTENT_XHTML));
+
+        addTenantButton.addClickListener((Button.ClickListener) event -> {
+            String name = tenantNameTextField.getValue();
+            if (StringUtils.isBlank(name)) {
+                Notification.show("Warning", "Empty tenant name", Notification.Type.WARNING_MESSAGE);
+                return;
+            }
+
+            if (tenantDAO.findOne(name) != null) {
+                Notification.show("Warning", "Tenant already exists '" + name + "'", Notification.Type.WARNING_MESSAGE);
+                return;
+            }
+
+            Tenant tenant = new Tenant();
+            tenant.setTenant(name);
+            tenant = tenantDAO.save(tenant);
+            Notification.show("Notification", "Added tenant with name '" + tenant.getTenant() + "'", Notification.Type.TRAY_NOTIFICATION);
+        });
+
         final VerticalLayout tenantInfo = new VerticalLayout();
         content.addComponent(tenantInfo);
 
