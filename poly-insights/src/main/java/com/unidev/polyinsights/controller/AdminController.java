@@ -4,6 +4,7 @@ import com.unidev.polyinsights.service.TenantDAO;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -29,6 +30,14 @@ public class AdminController extends UI {
         content.addComponent(titleBar);
 
 
+        ComboBox tenants = new ComboBox("Available tenants");
+        tenants.setInvalidAllowed(false);
+        tenants.setNullSelectionAllowed(false);
+
+        tenantDAO.findAll().forEach(item -> tenants.addItems(item.getTenant()));
+
+
+        content.addComponent(tenants);
 
     }
 }
