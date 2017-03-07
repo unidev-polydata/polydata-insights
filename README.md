@@ -85,6 +85,22 @@ db['test_tenant.test_insight'].aggregate(
 
 ```
 
+
+## Example API calls
+
+http://localhost:9100/swagger-ui.html
+
+Log Insight
+```
+curl -X POST --header 'Content-Type: application/json' --header 'Accept: text/plain' -d '{ \ 
+   "key": "potato-wallpaper", \ 
+   "tenant": "test_tenant", \ 
+   "type": "test_insight_type", \ 
+   "value": "1" \ 
+ }' 'http://localhost:9100/insight'
+```
+
+
 License
 =======
  
