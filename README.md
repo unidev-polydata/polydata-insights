@@ -91,8 +91,11 @@ db['test_tenant.test_insight'].aggregate(
 http://localhost:9100/swagger-ui.html
 
 Log Insight
+
+Request
+
 ```
-curl -X POST --header 'Content-Type: application/json' --header 'Accept: text/plain' -d '{ \ 
+curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{ \ 
    "key": "potato-wallpaper", \ 
    "tenant": "test_tenant", \ 
    "type": "test_insight_type", \ 
@@ -100,6 +103,36 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: text/pl
  }' 'http://localhost:9100/insight'
 ```
 
+Get insights by sum value
+ 
+
+Request
+
+```
+curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{ \ 
+   "insight": "test_insight_type", \ 
+   "interval": "DAY", \ 
+   "tenant": "test_tenant" \ 
+ }' 'http://localhost:9100/insight/value/sum'
+```
+
+Response
+
+```
+{
+  "version": "0.0.1",
+  "data": [
+    {
+      "count": 8,
+      "_id": "test_insight"
+    },
+    {
+      "count": 6,
+      "_id": "potato-wallpaper"
+    }
+  ]
+}
+```
 
 License
 =======
