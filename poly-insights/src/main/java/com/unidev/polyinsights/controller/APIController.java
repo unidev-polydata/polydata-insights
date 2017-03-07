@@ -7,14 +7,17 @@ import com.unidev.polyinsights.model.InsightQuery;
 import com.unidev.polyinsights.model.InsightRequest;
 import com.unidev.polyinsights.service.PolyInsights;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
  * API controller
  */
+@RestController("/api")
 public class APIController {
 
     @Autowired
@@ -23,7 +26,7 @@ public class APIController {
     @Autowired
     private WebUtils webUtils;
 
-    @PostMapping("/api/insight")
+    @PostMapping("/insight")
     public void insight(@RequestBody InsightRequest insightRequest, HttpServletRequest httpServletRequest) {
         String clientIp = webUtils.getClientIp(httpServletRequest);
         String clientId = httpServletRequest.getHeader("ClientId");
@@ -32,17 +35,17 @@ public class APIController {
         polyInsights.logInsight(insightRequest, clientIp + ":" + clientId, basicPoly);
     }
 
-    @PostMapping("/api/listTopKeysByValueSum")
+    @PostMapping("/insight/value/sum")
     public HateoasResponse listTopKeysByValueSum(@RequestBody InsightQuery insightQuery) {
         return HateoasResponse.hateoasResponse(polyInsights.listTopKeysByValueSum(insightQuery));
     }
 
-    @PostMapping("/api/listTopKeysByAverageValue")
+    @PostMapping("/insight/value/average")
     public HateoasResponse listTopKeysByAverageValue(@RequestBody InsightQuery insightQuery) {
         return HateoasResponse.hateoasResponse(polyInsights.listTopKeysByAverageValue(insightQuery));
     }
 
-    @PostMapping("/api/fetchInsightStatsByKey")
+    @PostMapping("/insight/key")
     public HateoasResponse fetchInsightStatsByKey(@RequestBody InsightQuery insightQuery) {
         return HateoasResponse.hateoasResponse(polyInsights.fetchInsightStatsByKey(insightQuery));
     }
