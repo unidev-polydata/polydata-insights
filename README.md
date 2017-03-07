@@ -134,6 +134,64 @@ Response
 }
 ```
 
+Average statistics
+
+Request
+
+```
+curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{ \ 
+   "insight": "test_insight_type", \ 
+   "interval": "DAY", \ 
+   "tenant": "test_tenant" \ 
+ }' 'http://localhost:9100/insight/value/average'
+```
+
+Response
+
+```
+{
+  "version": "0.0.1",
+  "data": [
+    {
+      "avg": 2,
+      "_id": "test_insight"
+    },
+    {
+      "avg": 1,
+      "_id": "potato-wallpaper"
+    }
+  ]
+}
+```
+
+Fetch poly insights
+
+Request
+
+```
+curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/hal+json' -d '{ \ 
+   "insight": "test_insight_type", \ 
+   "interval": "DAY", \ 
+   "tenant": "test_tenant", \ 
+ "key" :"potato-wallpaper" \ 
+ }' 'http://localhost:9100/insight/key'
+```
+
+Response
+```
+{
+  "version": "0.0.1",
+  "data": [
+    {
+      "stats": {
+        "1": 6
+      },
+      "_id": "potato-wallpaper"
+    }
+  ]
+}
+```
+
 License
 =======
  
