@@ -89,7 +89,7 @@ public class AdminController extends UI {
                 "  \"types\" : {\n" +
                 "    \"like\" : {\n" +
                 "      \"name\" : \"like\",\n" +
-                "      \"values\" : [ \"1\", \"2\"],\n" +
+                "      \"values\" : [ \"-1\", \"1\"],\n" +
                 "      \"interval\" : 1000,\n" +
                 "      \"sameInsightInterval\" : 1000\n" +
                 "    }\n" +
