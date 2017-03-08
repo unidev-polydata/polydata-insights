@@ -1,7 +1,7 @@
-package com.unidev.polyinsights.service;
+package com.unidev.polydata.insights.service;
 
 
-import com.unidev.polyinsights.model.Tenant;
+import com.unidev.polydata.insights.model.Tenant;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

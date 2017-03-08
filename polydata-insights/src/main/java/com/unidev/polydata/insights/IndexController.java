@@ -1,4 +1,4 @@
-package com.unidev.polyinsights;
+package com.unidev.polydata.insights;
 
 import org.springframework.stereotype.Controller;
 

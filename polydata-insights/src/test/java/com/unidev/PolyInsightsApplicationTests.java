@@ -1,10 +1,10 @@
 package com.unidev;
 
-import com.unidev.polyinsights.Application;
-import com.unidev.polyinsights.model.*;
-import com.unidev.polyinsights.service.InsightNotAccepted;
-import com.unidev.polyinsights.service.PolyInsights;
-import com.unidev.polyinsights.service.TenantDAO;
+import com.unidev.polydata.insights.Application;
+import com.unidev.polydata.insights.model.*;
+import com.unidev.polydata.insights.service.InsightNotAccepted;
+import com.unidev.polydata.insights.service.PolyInsights;
+import com.unidev.polydata.insights.service.TenantDAO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.unidev.polyinsights.model;
+package com.unidev.polydata.insights.model;
 
 import com.unidev.polydata.domain.BasicPolyList;
 

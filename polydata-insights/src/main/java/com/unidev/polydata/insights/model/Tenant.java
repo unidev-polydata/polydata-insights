@@ -1,4 +1,4 @@
-package com.unidev.polyinsights.model;
+package com.unidev.polydata.insights.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

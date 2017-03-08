@@ -1,8 +1,8 @@
-package com.unidev.polyinsights.service;
+package com.unidev.polydata.insights.service;
 
 
 import com.unidev.polydata.domain.BasicPoly;
-import com.unidev.polyinsights.model.*;
+import com.unidev.polydata.insights.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

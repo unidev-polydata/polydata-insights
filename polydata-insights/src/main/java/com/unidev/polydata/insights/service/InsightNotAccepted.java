@@ -1,4 +1,4 @@
-package com.unidev.polyinsights.service;
+package com.unidev.polydata.insights.service;
 
 import com.unidev.platform.common.exception.UnidevRuntimeException;
 

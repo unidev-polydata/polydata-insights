@@ -1,9 +1,9 @@
-package com.unidev.polyinsights.controller;
+package com.unidev.polydata.insights.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.unidev.polyinsights.model.Tenant;
-import com.unidev.polyinsights.service.TenantDAO;
+import com.unidev.polydata.insights.model.Tenant;
+import com.unidev.polydata.insights.service.TenantDAO;
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.Property;
 import com.vaadin.server.VaadinRequest;

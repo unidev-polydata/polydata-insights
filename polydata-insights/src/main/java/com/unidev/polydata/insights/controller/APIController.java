@@ -1,13 +1,12 @@
-package com.unidev.polyinsights.controller;
+package com.unidev.polydata.insights.controller;
 
 import com.unidev.platform.j2ee.common.WebUtils;
 import com.unidev.polydata.domain.BasicPoly;
-import com.unidev.polyinsights.model.HateoasResponse;
-import com.unidev.polyinsights.model.InsightQuery;
-import com.unidev.polyinsights.model.InsightRequest;
-import com.unidev.polyinsights.service.PolyInsights;
+import com.unidev.polydata.insights.model.HateoasResponse;
+import com.unidev.polydata.insights.model.InsightQuery;
+import com.unidev.polydata.insights.model.InsightRequest;
+import com.unidev.polydata.insights.service.PolyInsights;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;

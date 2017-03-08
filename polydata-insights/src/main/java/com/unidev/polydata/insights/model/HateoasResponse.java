@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.unidev.polyinsights.model;
+package com.unidev.polydata.insights.model;
 
 
-import com.unidev.polyinsights.Application;
+import com.unidev.polydata.insights.Application;
 import org.springframework.hateoas.ResourceSupport;
 
 /**

@@ -1,4 +1,4 @@
-package com.unidev.polyinsights.controller;
+package com.unidev.polydata.insights.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
