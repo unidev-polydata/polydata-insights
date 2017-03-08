@@ -100,7 +100,7 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
    "tenant": "test_tenant", \ 
    "type": "test_insight_type", \ 
    "value": "1" \ 
- }' 'http://localhost:9100/insight'
+ }' 'http://localhost:9100/api/insight'
 ```
 
 Get insights by sum value
@@ -113,7 +113,7 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
    "insight": "test_insight_type", \ 
    "interval": "DAY", \ 
    "tenant": "test_tenant" \ 
- }' 'http://localhost:9100/insight/value/sum'
+ }' 'http://localhost:9100/api/insight/value/sum'
 ```
 
 Response
@@ -143,7 +143,7 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
    "insight": "test_insight_type", \ 
    "interval": "DAY", \ 
    "tenant": "test_tenant" \ 
- }' 'http://localhost:9100/insight/value/average'
+ }' 'http://localhost:9100/api/insight/value/average'
 ```
 
 Response
@@ -174,7 +174,7 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
    "interval": "DAY", \ 
    "tenant": "test_tenant", \ 
  "key" :"potato-wallpaper" \ 
- }' 'http://localhost:9100/insight/key'
+ }' 'http://localhost:9100/api/insight/key'
 ```
 
 Response
