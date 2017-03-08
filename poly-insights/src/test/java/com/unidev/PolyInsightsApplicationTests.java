@@ -9,16 +9,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -73,7 +69,7 @@ public class PolyInsightsApplicationTests {
 
 		InsightType insightType = new InsightType();
 		insightType.setInterval(1000);
-		insightType.setName("test_insight_type");
+		insightType.setName("test_insight");
 		insightType.setValues(new HashSet<>(Arrays.asList("1", "2", "3")));
 		tenant.addType(insightType);
 
@@ -83,7 +79,7 @@ public class PolyInsightsApplicationTests {
 		InsightRequest insightRequest = new InsightRequest();
 		insightRequest.setTenant("test_tenant");
 		insightRequest.setKey("test_insight");
-		insightRequest.setType("test_insight_type");
+		insightRequest.setType("test_insight");
 		insightRequest.setValue("2");
 
 		Insight insight = polyInsights.logInsight(insightRequest, "potato", new HashMap());
@@ -178,7 +174,7 @@ public class PolyInsightsApplicationTests {
 	public void listTopKeysByValueSum() {
 		InsightQuery insightQuery = new InsightQuery();
 		insightQuery.setTenant("test_tenant");
-		insightQuery.setInsight("test_insight_type");
+		insightQuery.setInsight("test_insight");
 		insightQuery.setInterval(TimeInterval.MONTH);
 		polyInsights.listTopKeysByValueSum(insightQuery);
 	}
@@ -187,7 +183,7 @@ public class PolyInsightsApplicationTests {
 	public void listTopKeysByAverageValue() {
 		InsightQuery insightQuery = new InsightQuery();
 		insightQuery.setTenant("test_tenant");
-		insightQuery.setInsight("test_insight_type");
+		insightQuery.setInsight("test_insight");
 		insightQuery.setInterval(TimeInterval.MONTH);
 		polyInsights.listTopKeysByAverageValue(insightQuery);
 	}
@@ -196,7 +192,7 @@ public class PolyInsightsApplicationTests {
 	public void fetchInsightStatsByKey() {
 		InsightQuery insightQuery = new InsightQuery();
 		insightQuery.setTenant("test_tenant");
-		insightQuery.setInsight("test_insight_type");
+		insightQuery.setInsight("test_insight");
 		insightQuery.setKey("test_insight2");
 		insightQuery.setInterval(TimeInterval.MONTH);
 		polyInsights.fetchInsightStatsByKey(insightQuery);
