@@ -2,7 +2,7 @@ project.ext.unidevPlatformVersion = "2.1.0-SNAPSHOT"
 
 subprojects {
 
-    group = 'com.unidev.app'
+    group = 'com.unidev.polydata'
     version = '0.0.1-SNAPSHOT'
 
 
