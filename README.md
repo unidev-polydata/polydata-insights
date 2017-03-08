@@ -1,4 +1,4 @@
-# poly-insights
+# polydata-insights
 
 Service for collectiong insights on different poly records
 
