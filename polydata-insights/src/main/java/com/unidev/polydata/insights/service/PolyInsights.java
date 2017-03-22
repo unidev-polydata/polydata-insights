@@ -171,6 +171,9 @@ public class PolyInsights {
 
         AggregationResults<BasicPoly> aggregate = mongoTemplate.aggregate(aggregation, collection, BasicPoly.class);
         BasicPoly mappedResult = aggregate.getUniqueMappedResult();
+        if (mappedResult == null) {
+            return new InsightQueryResponse();
+        }
         LOG.info("fetchInsightStatsByKey {}", mappedResult); //{keys=[2, 1], _id=test_insight2}
 
         BasicPoly stats = new BasicPoly();
