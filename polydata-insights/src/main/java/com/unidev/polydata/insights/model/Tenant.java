@@ -15,6 +15,9 @@ public class Tenant {
 
     private Map<String, InsightType> types;
 
+    private Boolean createResultIfMissing;
+    private String resultsUri;
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("Tenant{");
@@ -65,5 +68,21 @@ public class Tenant {
 
     public void setTypes(Map<String, InsightType> types) {
         this.types = types;
+    }
+
+    public String getResultsUri() {
+        return resultsUri;
+    }
+
+    public void setResultsUri(String resultsUri) {
+        this.resultsUri = resultsUri;
+    }
+
+    public Boolean getCreateResultIfMissing() {
+        return createResultIfMissing;
+    }
+
+    public void setCreateResultIfMissing(Boolean createResultIfMissing) {
+        this.createResultIfMissing = createResultIfMissing;
     }
 }
