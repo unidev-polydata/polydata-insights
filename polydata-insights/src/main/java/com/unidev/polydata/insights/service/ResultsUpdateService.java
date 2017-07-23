@@ -31,8 +31,12 @@ public class ResultsUpdateService {
 
     public static final String INSIGHTS_KEY = "_insights";
 
-    @Autowired
+
     private PolyInsights polyInsights;
+
+    public void setPolyInsights(@Autowired PolyInsights polyInsights) {
+        this.polyInsights = polyInsights;
+    }
 
     @Async
     public CompletableFuture<Document> updateResults(Tenant tenant, Insight insight, InsightRequest insightRecord) {

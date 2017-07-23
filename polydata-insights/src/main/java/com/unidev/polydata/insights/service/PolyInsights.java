@@ -35,8 +35,12 @@ public class PolyInsights {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    @Autowired
     private ResultsUpdateService resultsUpdateService;
+
+    public void setResultsUpdateService(
+        @Autowired ResultsUpdateService resultsUpdateService) {
+        this.resultsUpdateService = resultsUpdateService;
+    }
 
     /**
      * Log insight for storage
