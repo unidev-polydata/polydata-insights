@@ -205,9 +205,7 @@ public class PolyInsights {
      */
     public InsightQueryResponse fetchInsightStatsByKey(InsightQuery insightQuery) {
         Map<Long, Long> map = fetchInsightsStatsMap(insightQuery);
-        if (map.isEmpty()) {
-            return new InsightQueryResponse();
-        }
+
         BasicPoly stats = new BasicPoly();
         stats._id(insightQuery.getKey());
 
