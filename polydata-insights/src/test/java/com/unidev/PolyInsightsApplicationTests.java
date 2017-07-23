@@ -4,9 +4,12 @@ import com.unidev.polydata.insights.Application;
 import com.unidev.polydata.insights.model.*;
 import com.unidev.polydata.insights.service.InsightNotAccepted;
 import com.unidev.polydata.insights.service.PolyInsights;
+import com.unidev.polydata.insights.service.ResultsUpdateService;
 import com.unidev.polydata.insights.service.TenantDAO;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,6 +35,11 @@ public class PolyInsightsApplicationTests {
 	@Autowired
 	private PolyInsights polyInsights;
 
+	@Before
+	public void setup() {
+		polyInsights.setResultsUpdateService(Mockito.mock(ResultsUpdateService.class));
+	}
+
 	@Test
 	public void contextLoads() {
 
@@ -39,6 +47,7 @@ public class PolyInsightsApplicationTests {
 
 	@Test
 	public void tenantCrud() {
+
 
 		Tenant tenant = new Tenant();
 		tenant.setTenant("potato");
