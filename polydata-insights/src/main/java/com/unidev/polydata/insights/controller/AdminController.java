@@ -71,6 +71,8 @@ public class AdminController extends UI {
         });
 
         content.addComponent(new Label("<pre>" +
+                "resultsUri: mongodb://devdb/insights-stats.data\n" +
+                "createResultIfMissing: false" +
                 "\nVotes:\n" +
                 "{\n" +
                 "  \"tenant\" : \"cats_wallpapers\",\n" +
@@ -138,6 +140,7 @@ public class AdminController extends UI {
                     Notification.show("Notification", "Record was update for tenant:" + updatedTenant.getTenant(), Notification.Type.TRAY_NOTIFICATION);
 
                 } catch (IOException e) {
+                    e.printStackTrace();
                     throw new RuntimeException(e);
                 }
             });

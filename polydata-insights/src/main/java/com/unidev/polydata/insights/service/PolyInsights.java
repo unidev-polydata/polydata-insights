@@ -3,6 +3,7 @@ package com.unidev.polydata.insights.service;
 
 import com.unidev.polydata.domain.BasicPoly;
 import com.unidev.polydata.insights.model.*;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +27,16 @@ public class PolyInsights {
 
     private static Logger LOG = LoggerFactory.getLogger(PolyInsights.class);
 
+    public static final String STATS_KEY = "stats";
+
     @Autowired
     private TenantDAO tenantDAO;
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private ResultsUpdateService resultsUpdateService;
 
     /**
      * Log insight for storage
@@ -77,6 +83,11 @@ public class PolyInsights {
         insight.setValue(Long.parseLong(insightRecord.getValue()));
         insight.setCustomData(customData);
         mongoTemplate.save(insight, collection);
+
+        if (StringUtils.isNotBlank(tenant.getResultsUri())) {
+            resultsUpdateService.updateResults(tenant, insight, insightRecord);
+        }
+
         return insight;
     }
 
@@ -153,31 +164,25 @@ public class PolyInsights {
         return insightResponse;
     }
 
-    /**
-     * Fetch inisght values stats
-     * @param insightQuery
-     * @return
-     */
-    public InsightQueryResponse fetchInsightStatsByKey(InsightQuery insightQuery) {
+
+    public Map<Long, Long> fetchInsightsStatsMap(InsightQuery insightQuery) {
         validateTenantInsight(insightQuery.getTenant(), insightQuery.getInsight());
         String collection =  insightQuery.getTenant() + "." + insightQuery.getInsight();
 
         Date startDate = insightQuery.getInterval().fetchDateFrom(new Date());
 
         Aggregation aggregation = newAggregation(
-                match(Criteria.where("key").is(insightQuery.getKey()).and("date").gte(startDate)),
-                group("key").push("value").as("keys")
+            match(Criteria.where("key").is(insightQuery.getKey()).and("date").gte(startDate)),
+            group("key").push("value").as("keys")
         );
 
         AggregationResults<BasicPoly> aggregate = mongoTemplate.aggregate(aggregation, collection, BasicPoly.class);
         BasicPoly mappedResult = aggregate.getUniqueMappedResult();
         if (mappedResult == null) {
-            return new InsightQueryResponse();
+            return Collections.emptyMap();
         }
         LOG.info("fetchInsightStatsByKey {}", mappedResult); //{keys=[2, 1], _id=test_insight2}
 
-        BasicPoly stats = new BasicPoly();
-        stats._id(mappedResult._id());
         List<Long> keys = (List<Long>) mappedResult.get("keys");
         Map<Long, Long> map = new HashMap<>();
         keys.forEach( key -> {
@@ -186,11 +191,27 @@ public class PolyInsights {
             }
             map.put(key, map.get(key) + 1);
         });
-        stats.put("stats", map);
+        return map;
+    }
+
+    /**
+     * Fetch inisght values stats
+     * @param insightQuery
+     * @return
+     */
+    public InsightQueryResponse fetchInsightStatsByKey(InsightQuery insightQuery) {
+        Map<Long, Long> map = fetchInsightsStatsMap(insightQuery);
+        if (map.isEmpty()) {
+            return new InsightQueryResponse();
+        }
+        BasicPoly stats = new BasicPoly();
+        stats._id(insightQuery.getKey());
+
+        stats.put(STATS_KEY, map);
         InsightQueryResponse insightResponse = new InsightQueryResponse();
         insightResponse.add(stats);
 
-        LOG.info("fetchInsightStatsByKey response {}", insightResponse);
+        LOG.debug("fetchInsightStatsByKey response {}", insightResponse);
         return insightResponse;
     }
 

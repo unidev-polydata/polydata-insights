@@ -1,13 +1,18 @@
 package com.unidev.polydata.insights;
 
 import com.unidev.platform.j2ee.common.WebUtils;
+import com.unidev.polydata.insights.service.ResultsUpdateService;
+import java.util.concurrent.Executor;
 import org.jminix.console.servlet.MiniConsoleServlet;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
@@ -20,10 +25,14 @@ import javax.servlet.ServletException;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableMongoRepositories
+@EnableAsync
 @EnableSwagger2
 public class Application implements ServletContextInitializer {
 
 	public static final String VERSION = "0.0.1";
+
+	@Value("${update.threads:5}")
+	private int updateThreadCount;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
@@ -38,6 +47,13 @@ public class Application implements ServletContextInitializer {
     public void onStartup(ServletContext servletContext) throws ServletException {
         servletContext.addServlet("JmxMiniConsoleServlet", MiniConsoleServlet.class).addMapping("/jmx/*");
     }
+	@Bean(name = "threadPoolTaskExecutor")
+	public Executor threadPoolTaskExecutor() {
+		ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
+		threadPoolTaskExecutor.setCorePoolSize(updateThreadCount);
+		return threadPoolTaskExecutor;
+	}
+
 
 	@Bean
 	public Docket apiDocs() {
@@ -46,6 +62,11 @@ public class Application implements ServletContextInitializer {
 				.apis(RequestHandlerSelectors.any())
 				.paths(PathSelectors.any())
 				.build();
+	}
+
+	@Bean
+	public ResultsUpdateService resultsUpdateService() {
+		return new ResultsUpdateService();
 	}
 
 }
