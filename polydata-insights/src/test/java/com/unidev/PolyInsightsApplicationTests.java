@@ -37,7 +37,7 @@ public class PolyInsightsApplicationTests {
 
 	@Before
 	public void setup() {
-		polyInsights.setPolyInsights(Mockito.mock(ResultsUpdateService.class));
+
 	}
 
 	@Test

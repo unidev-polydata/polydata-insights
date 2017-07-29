@@ -17,6 +17,7 @@ import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -31,12 +32,9 @@ public class ResultsUpdateService implements IResultsUpdateService {
 
     public static final String INSIGHTS_KEY = "_insights";
 
-    private IPolyInsights polyInsights;
-
     @Autowired
-    public void setResultsUpdateService(IPolyInsights polyInsights) {
-        this.polyInsights = polyInsights;
-    }
+    @Lazy
+    private IPolyInsights polyInsights;
 
     @Override
     @Async

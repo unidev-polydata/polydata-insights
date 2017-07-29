@@ -1,12 +1,14 @@
 package com.unidev.polydata.insights.service;
 
 
+import com.netflix.discovery.converters.Auto;
 import com.unidev.polydata.domain.BasicPoly;
 import com.unidev.polydata.insights.model.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
@@ -35,12 +37,9 @@ public class PolyInsights implements IPolyInsights {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    private IResultsUpdateService resultsUpdateService;
-
     @Autowired
-    public void setPolyInsights(IResultsUpdateService resultsUpdateService) {
-        this.resultsUpdateService = resultsUpdateService;
-    }
+    @Lazy
+    private IResultsUpdateService resultsUpdateService;
 
     /**
      * Log insight for storage
