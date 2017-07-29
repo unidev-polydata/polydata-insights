@@ -23,7 +23,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
  * Service for doing operations on insights
  */
 @Service
-public class PolyInsights {
+public class PolyInsights implements IPolyInsights {
 
     private static Logger LOG = LoggerFactory.getLogger(PolyInsights.class);
 
@@ -35,10 +35,10 @@ public class PolyInsights {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    private ResultsUpdateService resultsUpdateService;
+    private IResultsUpdateService resultsUpdateService;
 
-    public void setResultsUpdateService(
-        @Autowired ResultsUpdateService resultsUpdateService) {
+    @Autowired
+    public void setPolyInsights(IResultsUpdateService resultsUpdateService) {
         this.resultsUpdateService = resultsUpdateService;
     }
 
@@ -46,7 +46,9 @@ public class PolyInsights {
      * Log insight for storage
      * @param insightRecord
      */
-    public Insight logInsight(InsightRequest insightRecord, String clientId, Map<String,Object> customData) {
+    @Override
+    public Insight logInsight(InsightRequest insightRecord, String clientId,
+        Map<String, Object> customData) {
 
         Optional<InsightType> optionalInsightType = validateTenantInsight(insightRecord.getTenant(), insightRecord.getType());
         Tenant tenant = tenantDAO.findOne(insightRecord.getTenant());
@@ -121,6 +123,7 @@ public class PolyInsights {
      * @param insightQuery
      * @return List of [{count=4, _id=test_insight}, {count=2, _id=test_insight2}]
      */
+    @Override
     public InsightQueryResponse listTopKeysByValueSum(InsightQuery insightQuery) {
         validateTenantInsight(insightQuery.getTenant(), insightQuery.getInsight());
         String collection =  insightQuery.getTenant() + "." + insightQuery.getInsight();
@@ -147,6 +150,7 @@ public class PolyInsights {
      * @param insightQuery
      * @return [{avg=2.0, _id=test_insight}, {avg=1.5, _id=test_insight2}]
      */
+    @Override
     public InsightQueryResponse listTopKeysByAverageValue(InsightQuery insightQuery) {
         validateTenantInsight(insightQuery.getTenant(), insightQuery.getInsight());
         String collection =  insightQuery.getTenant() + "." + insightQuery.getInsight();
@@ -169,6 +173,7 @@ public class PolyInsights {
     }
 
 
+    @Override
     public Map<Long, Long> fetchInsightsStatsMap(InsightQuery insightQuery) {
         validateTenantInsight(insightQuery.getTenant(), insightQuery.getInsight());
         String collection =  insightQuery.getTenant() + "." + insightQuery.getInsight();
@@ -203,6 +208,7 @@ public class PolyInsights {
      * @param insightQuery
      * @return
      */
+    @Override
     public InsightQueryResponse fetchInsightStatsByKey(InsightQuery insightQuery) {
         Map<Long, Long> map = fetchInsightsStatsMap(insightQuery);
 

@@ -25,21 +25,23 @@ import org.springframework.stereotype.Service;
  * Service for results calculation and store in mongodb
  */
 @Service
-public class ResultsUpdateService {
+public class ResultsUpdateService implements IResultsUpdateService {
 
     private static Logger LOG = LoggerFactory.getLogger(ResultsUpdateService.class);
 
     public static final String INSIGHTS_KEY = "_insights";
 
+    private IPolyInsights polyInsights;
 
-    private PolyInsights polyInsights;
-
-    public void setPolyInsights(@Autowired PolyInsights polyInsights) {
+    @Autowired
+    public void setResultsUpdateService(IPolyInsights polyInsights) {
         this.polyInsights = polyInsights;
     }
 
+    @Override
     @Async
-    public CompletableFuture<Document> updateResults(Tenant tenant, Insight insight, InsightRequest insightRecord) {
+    public CompletableFuture<Document> updateResults(Tenant tenant, Insight insight,
+        InsightRequest insightRecord) {
 
         MongoClientURI mongoURI = new MongoClientURI(tenant.getResultsUri());
         try (MongoClient mongoClient = new MongoClient(mongoURI)) {
