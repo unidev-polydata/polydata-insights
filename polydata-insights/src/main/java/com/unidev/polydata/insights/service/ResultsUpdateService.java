@@ -75,7 +75,10 @@ public class ResultsUpdateService implements IResultsUpdateService {
                 insightDocument.put(timeInterval.name().toLowerCase(), statsDocument);
             }
 
-            Document typeDocument = new Document();
+            Document typeDocument = (Document) document.get(INSIGHTS_KEY);
+            if (typeDocument == null) {
+                typeDocument = new Document();
+            }
             typeDocument.put(insightRecord.getType(), insightDocument);
             document.put(INSIGHTS_KEY, typeDocument);
 
