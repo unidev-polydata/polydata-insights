@@ -29,7 +29,6 @@ public class Tenant {
 
     /**
      * Add tenant to tenant map
-     * @param type
      */
     public void addType(InsightType type) {
         if (types == null) {
@@ -40,8 +39,6 @@ public class Tenant {
 
     /**
      * Fetch insight by tenant type
-     * @param type
-     * @return
      */
     public Optional<InsightType> fetchInsight(String type) {
         if (types == null) {

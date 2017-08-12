@@ -28,10 +28,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ResultsUpdateService implements IResultsUpdateService {
 
-    private static Logger LOG = LoggerFactory.getLogger(ResultsUpdateService.class);
-
     public static final String INSIGHTS_KEY = "_insights";
-
+    private static Logger LOG = LoggerFactory.getLogger(ResultsUpdateService.class);
     @Autowired
     @Lazy
     private IPolyInsights polyInsights;

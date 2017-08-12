@@ -9,5 +9,6 @@ import org.springframework.stereotype.Repository;
  * Repository for accessing tenants
  */
 @Repository
-public interface TenantDAO  extends MongoRepository<Tenant, String> {
+public interface TenantDAO extends MongoRepository<Tenant, String> {
+
 }

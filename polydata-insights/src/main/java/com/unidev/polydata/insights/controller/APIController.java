@@ -27,7 +27,8 @@ public class APIController {
     private WebUtils webUtils;
 
     @PostMapping("insight")
-    public void insight(@RequestBody InsightRequest insightRequest, HttpServletRequest httpServletRequest) {
+    public void insight(@RequestBody InsightRequest insightRequest,
+        HttpServletRequest httpServletRequest) {
         String clientIp = webUtils.getClientIp(httpServletRequest);
         String clientId = httpServletRequest.getHeader("ClientId");
         BasicPoly basicPoly = new BasicPoly();
@@ -42,7 +43,8 @@ public class APIController {
 
     @PostMapping("insight/value/average")
     public HateoasResponse listTopKeysByAverageValue(@RequestBody InsightQuery insightQuery) {
-        return HateoasResponse.hateoasResponse(polyInsights.listTopKeysByAverageValue(insightQuery));
+        return HateoasResponse
+            .hateoasResponse(polyInsights.listTopKeysByAverageValue(insightQuery));
     }
 
     @PostMapping("insight/key")

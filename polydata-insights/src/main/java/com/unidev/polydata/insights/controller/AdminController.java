@@ -50,54 +50,57 @@ public class AdminController extends UI {
 
         PopupView popup = new PopupView("Add Tenant", popupContent);
         content.addComponent(popup);
-        content.addComponent(new Label("<hr />",Label.CONTENT_XHTML));
+        content.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
 
         addTenantButton.addClickListener((Button.ClickListener) event -> {
             String name = tenantNameTextField.getValue();
             if (StringUtils.isBlank(name)) {
-                Notification.show("Warning", "Empty tenant name", Notification.Type.WARNING_MESSAGE);
+                Notification
+                    .show("Warning", "Empty tenant name", Notification.Type.WARNING_MESSAGE);
                 return;
             }
 
             if (tenantDAO.findOne(name) != null) {
-                Notification.show("Warning", "Tenant already exists '" + name + "'", Notification.Type.WARNING_MESSAGE);
+                Notification.show("Warning", "Tenant already exists '" + name + "'",
+                    Notification.Type.WARNING_MESSAGE);
                 return;
             }
 
             Tenant tenant = new Tenant();
             tenant.setTenant(name);
             tenant = tenantDAO.save(tenant);
-            Notification.show("Notification", "Added tenant with name '" + tenant.getTenant() + "'", Notification.Type.TRAY_NOTIFICATION);
+            Notification.show("Notification", "Added tenant with name '" + tenant.getTenant() + "'",
+                Notification.Type.TRAY_NOTIFICATION);
         });
 
         content.addComponent(new Label("<pre>" +
-                "resultsUri: mongodb://devdb/insights-stats.data\n" +
-                "createResultIfMissing: false" +
-                "\nVotes:\n" +
-                "{\n" +
-                "  \"tenant\" : \"cats_wallpapers\",\n" +
-                "  \"types\" : {\n" +
-                "    \"vote\" : {\n" +
-                "      \"name\" : \"vote\",\n" +
-                "      \"values\" : [ \"1\", \"2\", \"3\", \"4\", \"5\" ],\n" +
-                "      \"interval\" : 1000,\n" +
-                "      \"sameInsightInterval\" : 1000\n" +
-                "    }\n" +
-                "  }\n" +
-                "}\n" +
-                "\nLikes:\n" +
-                "{\n" +
-                "  \"tenant\" : \"cats_wallpapers\",\n" +
-                "  \"types\" : {\n" +
-                "    \"like\" : {\n" +
-                "      \"name\" : \"like\",\n" +
-                "      \"values\" : [ \"-1\", \"1\"],\n" +
-                "      \"interval\" : 1000,\n" +
-                "      \"sameInsightInterval\" : 1000\n" +
-                "    }\n" +
-                "  }\n" +
-                "}\n" +
-                "</pre>",Label.CONTENT_XHTML));
+            "resultsUri: mongodb://devdb/insights-stats.data\n" +
+            "createResultIfMissing: false" +
+            "\nVotes:\n" +
+            "{\n" +
+            "  \"tenant\" : \"cats_wallpapers\",\n" +
+            "  \"types\" : {\n" +
+            "    \"vote\" : {\n" +
+            "      \"name\" : \"vote\",\n" +
+            "      \"values\" : [ \"1\", \"2\", \"3\", \"4\", \"5\" ],\n" +
+            "      \"interval\" : 1000,\n" +
+            "      \"sameInsightInterval\" : 1000\n" +
+            "    }\n" +
+            "  }\n" +
+            "}\n" +
+            "\nLikes:\n" +
+            "{\n" +
+            "  \"tenant\" : \"cats_wallpapers\",\n" +
+            "  \"types\" : {\n" +
+            "    \"like\" : {\n" +
+            "      \"name\" : \"like\",\n" +
+            "      \"values\" : [ \"-1\", \"1\"],\n" +
+            "      \"interval\" : 1000,\n" +
+            "      \"sameInsightInterval\" : 1000\n" +
+            "    }\n" +
+            "  }\n" +
+            "}\n" +
+            "</pre>", Label.CONTENT_XHTML));
 
         final VerticalLayout tenantInfo = new VerticalLayout();
         content.addComponent(tenantInfo);
@@ -137,7 +140,9 @@ public class AdminController extends UI {
                     Tenant updatedTenant = objectMapper.readValue(json1, Tenant.class);
                     updatedTenant = tenantDAO.save(updatedTenant);
 
-                    Notification.show("Notification", "Record was update for tenant:" + updatedTenant.getTenant(), Notification.Type.TRAY_NOTIFICATION);
+                    Notification.show("Notification",
+                        "Record was update for tenant:" + updatedTenant.getTenant(),
+                        Notification.Type.TRAY_NOTIFICATION);
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -148,8 +153,6 @@ public class AdminController extends UI {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-
-
 
 
     }

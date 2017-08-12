@@ -14,17 +14,17 @@ public enum TimeInterval {
     YEAR(TimeUnit.DAYS.toMillis(365)),
     ALL(null);
 
+    private Long interval;
+
+    TimeInterval(Long interval) {
+        this.interval = interval;
+    }
+
     public Date fetchDateFrom(Date date) {
         if (interval == null) {
             return new Date(0);
         }
         return new Date(date.getTime() - interval);
-    }
-
-    private Long interval;
-
-    TimeInterval(Long interval) {
-        this.interval = interval;
     }
 
     public Long getInterval() {

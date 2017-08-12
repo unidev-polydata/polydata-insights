@@ -27,10 +27,8 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 @Service
 public class PolyInsights implements IPolyInsights {
 
-    private static Logger LOG = LoggerFactory.getLogger(PolyInsights.class);
-
     public static final String STATS_KEY = "stats";
-
+    private static Logger LOG = LoggerFactory.getLogger(PolyInsights.class);
     @Autowired
     private TenantDAO tenantDAO;
 
