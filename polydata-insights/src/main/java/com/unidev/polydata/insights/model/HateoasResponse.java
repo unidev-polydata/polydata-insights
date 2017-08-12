@@ -21,7 +21,6 @@ import org.springframework.hateoas.ResourceSupport;
 
 /**
  * Generic hataeos response object
- * @param <T>
  */
 public class HateoasResponse<T> extends ResourceSupport {
 

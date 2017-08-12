@@ -14,9 +14,9 @@ import java.util.Map;
  */
 
 @CompoundIndexes({
-        @CompoundIndex(name = "key_value", def = "{'key' : 1, 'value' : 1, 'date' : 1}"),
-        @CompoundIndex(name = "key_client_date", def = "{'key' : 1, 'clientId' : 1 ,'date' : 1}"),
-        @CompoundIndex(name = "client_date", def = "{'clientId' : 1 ,'date' : 1}")
+    @CompoundIndex(name = "key_value", def = "{'key' : 1, 'value' : 1, 'date' : 1}"),
+    @CompoundIndex(name = "key_client_date", def = "{'key' : 1, 'clientId' : 1 ,'date' : 1}"),
+    @CompoundIndex(name = "client_date", def = "{'clientId' : 1 ,'date' : 1}")
 })
 @Document
 public class Insight {
