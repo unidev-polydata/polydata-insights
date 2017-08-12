@@ -33,44 +33,45 @@ import javax.servlet.ServletException;
 @ComponentScan("com.unidev.polydata.insights")
 public class Application implements ServletContextInitializer {
 
-	public static final String VERSION = "0.0.1";
+    public static final String VERSION = "0.0.1";
 
-	@Value("${update.threads:5}")
-	private int updateThreadCount;
+    @Value("${update.threads:5}")
+    private int updateThreadCount;
 
-	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
 
-	@Bean
-	public WebUtils webUtils() {
-		return new WebUtils();
-	}
+    @Bean
+    public WebUtils webUtils() {
+        return new WebUtils();
+    }
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
-        servletContext.addServlet("JmxMiniConsoleServlet", MiniConsoleServlet.class).addMapping("/jmx/*");
+        servletContext.addServlet("JmxMiniConsoleServlet", MiniConsoleServlet.class)
+            .addMapping("/jmx/*");
     }
 
-	@Bean(name="taskExecutor")
-	public Executor asyncExecutor() {
-		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-		executor.setCorePoolSize(updateThreadCount);
-		executor.setMaxPoolSize(updateThreadCount * 2);
-		executor.setQueueCapacity(updateThreadCount * 10);
-		executor.setThreadNamePrefix("async-executor-");
-		executor.initialize();
-		return executor;
-	}
+    @Bean(name = "taskExecutor")
+    public Executor asyncExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(updateThreadCount);
+        executor.setMaxPoolSize(updateThreadCount * 2);
+        executor.setQueueCapacity(updateThreadCount * 10);
+        executor.setThreadNamePrefix("async-executor-");
+        executor.initialize();
+        return executor;
+    }
 
-	@Bean
-	public Docket apiDocs() {
-		return new Docket(DocumentationType.SWAGGER_2)
-				.select()
-				.apis(RequestHandlerSelectors.any())
-				.paths(PathSelectors.any())
-				.build();
-	}
+    @Bean
+    public Docket apiDocs() {
+        return new Docket(DocumentationType.SWAGGER_2)
+            .select()
+            .apis(RequestHandlerSelectors.any())
+            .paths(PathSelectors.any())
+            .build();
+    }
 
 }
 

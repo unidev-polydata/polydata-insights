@@ -43,13 +43,13 @@ public class PolyInsights implements IPolyInsights {
 
     /**
      * Log insight for storage
-     * @param insightRecord
      */
     @Override
     public Insight logInsight(InsightRequest insightRecord, String clientId,
         Map<String, Object> customData) {
 
-        Optional<InsightType> optionalInsightType = validateTenantInsight(insightRecord.getTenant(), insightRecord.getType());
+        Optional<InsightType> optionalInsightType = validateTenantInsight(insightRecord.getTenant(),
+            insightRecord.getType());
         Tenant tenant = tenantDAO.findOne(insightRecord.getTenant());
         InsightType insightType = optionalInsightType.get();
 
@@ -60,7 +60,7 @@ public class PolyInsights implements IPolyInsights {
 
         //TODO: add remote service call for checking if key exists
 
-        String collection =  tenant.getTenant() + "." + insightType.getName();
+        String collection = tenant.getTenant() + "." + insightType.getName();
 
         // check 'global' rate for posting
         Date minDate = new Date(System.currentTimeMillis() - insightType.getInterval());
@@ -74,7 +74,9 @@ public class PolyInsights implements IPolyInsights {
 
         // check specific key posting rate
         minDate = new Date(System.currentTimeMillis() - insightType.getSameInsightInterval());
-        query = new Query(Criteria.where("key").is(insightRecord.getKey()).and("clientId").is(clientId).and("date").gte(minDate));
+        query = new Query(
+            Criteria.where("key").is(insightRecord.getKey()).and("clientId").is(clientId)
+                .and("date").gte(minDate));
         count = mongoTemplate.count(query, Insight.class, collection);
         if (count != 0) {
             LOG.warn("Logging insight in interval time {}", insightRecord);
@@ -98,9 +100,6 @@ public class PolyInsights implements IPolyInsights {
 
     /**
      * Validate tenant and insight name
-     * @param tenantName
-     * @param insightName
-     * @return
      */
     protected Optional<InsightType> validateTenantInsight(String tenantName, String insightName) {
         Tenant tenant = tenantDAO.findOne(tenantName);
@@ -119,23 +118,24 @@ public class PolyInsights implements IPolyInsights {
 
     /**
      * List top insights by sum of insights, useful for likes
-     * @param insightQuery
+     *
      * @return List of [{count=4, _id=test_insight}, {count=2, _id=test_insight2}]
      */
     @Override
     public InsightQueryResponse listTopKeysByValueSum(InsightQuery insightQuery) {
         validateTenantInsight(insightQuery.getTenant(), insightQuery.getInsight());
-        String collection =  insightQuery.getTenant() + "." + insightQuery.getInsight();
+        String collection = insightQuery.getTenant() + "." + insightQuery.getInsight();
 
         Date startDate = insightQuery.getInterval().fetchDateFrom(new Date());
 
         Aggregation aggregation = newAggregation(
-                match(Criteria.where("date").gte(startDate)),
-                group("key").sum("value").as("count"),
-                sort(Sort.Direction.DESC, "count")
+            match(Criteria.where("date").gte(startDate)),
+            group("key").sum("value").as("count"),
+            sort(Sort.Direction.DESC, "count")
         );
 
-        AggregationResults<BasicPoly> aggregate = mongoTemplate.aggregate(aggregation, collection, BasicPoly.class);
+        AggregationResults<BasicPoly> aggregate = mongoTemplate
+            .aggregate(aggregation, collection, BasicPoly.class);
         List<BasicPoly> response = aggregate.getMappedResults();
         LOG.info("listTopKeysByValueSum {}", response);
 
@@ -146,23 +146,24 @@ public class PolyInsights implements IPolyInsights {
 
     /**
      * Fetch inisghts ordered by average value
-     * @param insightQuery
+     *
      * @return [{avg=2.0, _id=test_insight}, {avg=1.5, _id=test_insight2}]
      */
     @Override
     public InsightQueryResponse listTopKeysByAverageValue(InsightQuery insightQuery) {
         validateTenantInsight(insightQuery.getTenant(), insightQuery.getInsight());
-        String collection =  insightQuery.getTenant() + "." + insightQuery.getInsight();
+        String collection = insightQuery.getTenant() + "." + insightQuery.getInsight();
 
         Date startDate = insightQuery.getInterval().fetchDateFrom(new Date());
 
         Aggregation aggregation = newAggregation(
-                match(Criteria.where("date").gte(startDate)),
-                group("key").avg("value").as("avg"),
-                sort(Sort.Direction.DESC, "avg")
+            match(Criteria.where("date").gte(startDate)),
+            group("key").avg("value").as("avg"),
+            sort(Sort.Direction.DESC, "avg")
         );
 
-        AggregationResults<BasicPoly> aggregate = mongoTemplate.aggregate(aggregation, collection, BasicPoly.class);
+        AggregationResults<BasicPoly> aggregate = mongoTemplate
+            .aggregate(aggregation, collection, BasicPoly.class);
         List<BasicPoly> response = aggregate.getMappedResults();
         LOG.info("listTopKeysByAverageValue {}", response);
 
@@ -175,7 +176,7 @@ public class PolyInsights implements IPolyInsights {
     @Override
     public Map<Long, Long> fetchInsightsStatsMap(InsightQuery insightQuery) {
         validateTenantInsight(insightQuery.getTenant(), insightQuery.getInsight());
-        String collection =  insightQuery.getTenant() + "." + insightQuery.getInsight();
+        String collection = insightQuery.getTenant() + "." + insightQuery.getInsight();
 
         Date startDate = insightQuery.getInterval().fetchDateFrom(new Date());
 
@@ -184,7 +185,8 @@ public class PolyInsights implements IPolyInsights {
             group("key").push("value").as("keys")
         );
 
-        AggregationResults<BasicPoly> aggregate = mongoTemplate.aggregate(aggregation, collection, BasicPoly.class);
+        AggregationResults<BasicPoly> aggregate = mongoTemplate
+            .aggregate(aggregation, collection, BasicPoly.class);
         BasicPoly mappedResult = aggregate.getUniqueMappedResult();
         if (mappedResult == null) {
             return Collections.emptyMap();
@@ -193,7 +195,7 @@ public class PolyInsights implements IPolyInsights {
 
         List<Long> keys = (List<Long>) mappedResult.get("keys");
         Map<Long, Long> map = new HashMap<>();
-        keys.forEach( key -> {
+        keys.forEach(key -> {
             if (!map.containsKey(key)) {
                 map.put(key, 0L);
             }
@@ -204,8 +206,6 @@ public class PolyInsights implements IPolyInsights {
 
     /**
      * Fetch inisght values stats
-     * @param insightQuery
-     * @return
      */
     @Override
     public InsightQueryResponse fetchInsightStatsByKey(InsightQuery insightQuery) {
