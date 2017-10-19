@@ -5,18 +5,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unidev.polydata.insights.model.Tenant;
 import com.unidev.polydata.insights.service.TenantDAO;
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.HasValue.ValueChangeListener;
-import com.vaadin.data.provider.ListDataProvider;
+import com.vaadin.event.selection.SelectionListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringUI;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.SelectionMode;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.PopupView;
+import com.vaadin.ui.TextArea;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
+import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.io.IOException;
 
 /**
  * Controller for management of insights
@@ -24,12 +31,6 @@ import java.io.IOException;
 @SpringUI
 @Theme("valo")
 public class AdminController extends UI {
-
-    @Autowired
-    private TenantDAO tenantDAO;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     private static final String EXAMPLE_TENANT = "<pre>" +
         "resultsUri: mongodb://devdb/insights-stats.data\n" +
@@ -59,6 +60,10 @@ public class AdminController extends UI {
         "  }\n" +
         "}\n" +
         "</pre>";
+    @Autowired
+    private TenantDAO tenantDAO;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Override
     protected void init(VaadinRequest request) {
@@ -69,12 +74,11 @@ public class AdminController extends UI {
         HorizontalLayout titleBar = new HorizontalLayout();
         content.addComponent(titleBar);
 
-        ComboBox tenants = new ComboBox("Available tenants");
-        List<String> tenantNames = tenantDAO.findAll().stream().map(tenant -> tenant.getTenant() + "")
-            .collect(
-                Collectors.toList());
-        tenants.setDataProvider(new ListDataProvider(tenantNames));
-        content.addComponent(tenants);
+        final Grid<Tenant> tenantsGrid = new Grid<>(Tenant.class);
+        tenantsGrid.setSelectionMode(SelectionMode.SINGLE);
+        tenantsGrid.setColumns("tenant");
+        populateGrid(tenantsGrid);
+        content.addComponent(tenantsGrid);
 
         VerticalLayout popupContent = new VerticalLayout();
         TextField tenantNameTextField = new TextField("Tenant name");
@@ -105,17 +109,27 @@ public class AdminController extends UI {
             tenant = tenantDAO.save(tenant);
             Notification.show("Notification", "Added tenant with name '" + tenant.getTenant() + "'",
                 Notification.Type.TRAY_NOTIFICATION);
+            populateGrid(tenantsGrid);
         });
 
         final VerticalLayout tenantInfo = new VerticalLayout();
         content.addComponent(tenantInfo);
 
-        tenants.addValueChangeListener((ValueChangeListener) event -> {
-            String tenant = event.getValue() + "";
-            showTenantDetails(tenantInfo, tenant);
-        });
+        tenantsGrid.addSelectionListener((SelectionListener<Tenant>) event -> {
 
+            if (event.getFirstSelectedItem().isPresent()) {
+                String tenant = event.getFirstSelectedItem().get().getTenant();
+                showTenantDetails(tenantInfo, tenant);
+            } else {
+                tenantInfo.removeAllComponents();
+            }
+        });
         content.addComponent(new Label(EXAMPLE_TENANT, ContentMode.HTML));
+    }
+
+    private void populateGrid(Grid<Tenant> tenantsGrid) {
+        List<Tenant> tenants = tenantDAO.findAll();
+        tenantsGrid.setItems(tenants);
     }
 
     protected void showTenantDetails(VerticalLayout layout, String tenantName) {
@@ -159,7 +173,5 @@ public class AdminController extends UI {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 }
