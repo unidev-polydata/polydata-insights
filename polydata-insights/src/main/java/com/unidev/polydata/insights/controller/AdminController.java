@@ -7,6 +7,7 @@ import com.unidev.polydata.insights.service.TenantDAO;
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.Property;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +27,35 @@ public class AdminController extends UI {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    private static final String EXAMPLE_TENANT = "<pre>" +
+        "resultsUri: mongodb://devdb/insights-stats.data\n" +
+        "createResultIfMissing: false" +
+        "\nVotes:\n" +
+        "{\n" +
+        "  \"tenant\" : \"cats_wallpapers\",\n" +
+        "  \"types\" : {\n" +
+        "    \"vote\" : {\n" +
+        "      \"name\" : \"vote\",\n" +
+        "      \"values\" : [ \"1\", \"2\", \"3\", \"4\", \"5\" ],\n" +
+        "      \"interval\" : 1000,\n" +
+        "      \"sameInsightInterval\" : 1000\n" +
+        "    }\n" +
+        "  }\n" +
+        "}\n" +
+        "\nLikes:\n" +
+        "{\n" +
+        "  \"tenant\" : \"cats_wallpapers\",\n" +
+        "  \"types\" : {\n" +
+        "    \"like\" : {\n" +
+        "      \"name\" : \"like\",\n" +
+        "      \"values\" : [ \"-1\", \"1\"],\n" +
+        "      \"interval\" : 1000,\n" +
+        "      \"sameInsightInterval\" : 1000\n" +
+        "    }\n" +
+        "  }\n" +
+        "}\n" +
+        "</pre>";
 
     @Override
     protected void init(VaadinRequest request) {
@@ -73,34 +103,7 @@ public class AdminController extends UI {
                 Notification.Type.TRAY_NOTIFICATION);
         });
 
-        content.addComponent(new Label("<pre>" +
-            "resultsUri: mongodb://devdb/insights-stats.data\n" +
-            "createResultIfMissing: false" +
-            "\nVotes:\n" +
-            "{\n" +
-            "  \"tenant\" : \"cats_wallpapers\",\n" +
-            "  \"types\" : {\n" +
-            "    \"vote\" : {\n" +
-            "      \"name\" : \"vote\",\n" +
-            "      \"values\" : [ \"1\", \"2\", \"3\", \"4\", \"5\" ],\n" +
-            "      \"interval\" : 1000,\n" +
-            "      \"sameInsightInterval\" : 1000\n" +
-            "    }\n" +
-            "  }\n" +
-            "}\n" +
-            "\nLikes:\n" +
-            "{\n" +
-            "  \"tenant\" : \"cats_wallpapers\",\n" +
-            "  \"types\" : {\n" +
-            "    \"like\" : {\n" +
-            "      \"name\" : \"like\",\n" +
-            "      \"values\" : [ \"-1\", \"1\"],\n" +
-            "      \"interval\" : 1000,\n" +
-            "      \"sameInsightInterval\" : 1000\n" +
-            "    }\n" +
-            "  }\n" +
-            "}\n" +
-            "</pre>", Label.CONTENT_XHTML));
+        content.addComponent(new Label(EXAMPLE_TENANT, ContentMode.HTML));
 
         final VerticalLayout tenantInfo = new VerticalLayout();
         content.addComponent(tenantInfo);
