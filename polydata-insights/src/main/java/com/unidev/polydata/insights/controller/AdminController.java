@@ -5,11 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unidev.polydata.insights.model.Tenant;
 import com.unidev.polydata.insights.service.TenantDAO;
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.Property;
+import com.vaadin.data.HasValue.ValueChangeListener;
+import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -66,10 +69,10 @@ public class AdminController extends UI {
         content.addComponent(titleBar);
 
         ComboBox tenants = new ComboBox("Available tenants");
-        tenants.setInvalidAllowed(false);
-        tenants.setNullSelectionAllowed(false);
-
-        tenantDAO.findAll().forEach(item -> tenants.addItems(item.getTenant()));
+        List<String> tenantNames = tenantDAO.findAll().stream().map(tenant -> tenant.getTenant() + "")
+            .collect(
+                Collectors.toList());
+        tenants.setDataProvider(new ListDataProvider(tenantNames));
         content.addComponent(tenants);
 
         VerticalLayout popupContent = new VerticalLayout();
@@ -80,7 +83,7 @@ public class AdminController extends UI {
 
         PopupView popup = new PopupView("Add Tenant", popupContent);
         content.addComponent(popup);
-        content.addComponent(new Label("<hr />", Label.CONTENT_XHTML));
+        content.addComponent(new Label("<hr />", ContentMode.HTML));
 
         addTenantButton.addClickListener((Button.ClickListener) event -> {
             String name = tenantNameTextField.getValue();
@@ -103,16 +106,15 @@ public class AdminController extends UI {
                 Notification.Type.TRAY_NOTIFICATION);
         });
 
-        content.addComponent(new Label(EXAMPLE_TENANT, ContentMode.HTML));
-
         final VerticalLayout tenantInfo = new VerticalLayout();
         content.addComponent(tenantInfo);
 
-        tenants.addValueChangeListener((Property.ValueChangeListener) event -> {
-            String tenant = event.getProperty().getValue() + "";
+        tenants.addValueChangeListener((ValueChangeListener) event -> {
+            String tenant = event.getValue() + "";
             showTenantDetails(tenantInfo, tenant);
         });
 
+        content.addComponent(new Label(EXAMPLE_TENANT, ContentMode.HTML));
     }
 
     protected void showTenantDetails(VerticalLayout layout, String tenantName) {
