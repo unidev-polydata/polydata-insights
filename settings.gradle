@@ -1,2 +1,3 @@
+include "polydata-insights-model"
 include "polydata-insights"
 
