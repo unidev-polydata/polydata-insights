@@ -8,6 +8,11 @@ import java.util.concurrent.TimeUnit;
  */
 public enum TimeInterval {
 
+    HOUR_1(TimeUnit.HOURS.toMillis(1)),
+    HOURS_2(TimeUnit.HOURS.toMillis(2)),
+    HOURS_4(TimeUnit.HOURS.toMillis(4)),
+    HOURS_6(TimeUnit.HOURS.toMillis(6)),
+    HOURS_12(TimeUnit.HOURS.toMillis(12)),
     DAY(TimeUnit.DAYS.toMillis(1)),
     WEEK(TimeUnit.DAYS.toMillis(7)),
     MONTH(TimeUnit.DAYS.toMillis(30)),
