@@ -1,3 +1,4 @@
 include "polydata-insights-model"
+include "polydata-insights-client"
 include "polydata-insights"
 
