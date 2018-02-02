@@ -1,9 +1,24 @@
 package com.unidev.polydata.insights.service;
 
 
-import com.netflix.discovery.converters.Auto;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.group;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.match;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.newAggregation;
+import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort;
+
 import com.unidev.polydata.domain.BasicPoly;
-import com.unidev.polydata.insights.model.*;
+import com.unidev.polydata.insights.model.Insight;
+import com.unidev.polydata.insights.model.InsightQuery;
+import com.unidev.polydata.insights.model.InsightQueryResponse;
+import com.unidev.polydata.insights.model.InsightRequest;
+import com.unidev.polydata.insights.model.InsightType;
+import com.unidev.polydata.insights.model.Tenant;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +31,6 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
-
-import static org.springframework.data.mongodb.core.aggregation.Aggregation.*;
 
 /**
  * Service for doing operations on insights

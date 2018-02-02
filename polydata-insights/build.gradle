@@ -50,6 +50,8 @@ dependencies {
 	compile 'io.springfox:springfox-swagger2:2.7.0'
 	compile 'io.springfox:springfox-swagger-ui:2.7.0'
 
+	compile 'org.mongodb:mongo-java-driver:3.6.0'
+
 	compile 'org.jminix:jminix:1.2.0'
 	compile('org.springframework.boot:spring-boot-starter-data-mongodb')
 	compile('org.springframework.boot:spring-boot-starter-actuator')
