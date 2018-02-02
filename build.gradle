@@ -3,7 +3,7 @@ project.ext.unidevPlatformVersion = "2.1.0-SNAPSHOT"
 subprojects {
 
     group = 'com.unidev.polydata'
-    version = '0.0.2-SNAPSHOT'
+    version = '0.0.3-SNAPSHOT'
 
 
     apply plugin: 'maven'
